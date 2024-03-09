@@ -1,0 +1,82 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<div class="pagetitle">
+    <h1>Data Testing</h1>
+    <nav>
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="">Home</a></li>
+        <li class="breadcrumb-item active">Data Testing</li>
+      </ol>
+    </nav>
+  </div><!-- End Page Title -->
+
+  <button type="button" class="btn btn-primary mb-2">
+    <span class="badge bg-primary"><i class="bi bi-plus" ></i>Data Testing</span> 
+</button>
+
+<section class="section">
+    <div class="col-lg-12">
+        <div class="card">
+          <div class="card-body" style="overflow-x: auto;">
+            <h5 class="card-title">Data Testing</h5>
+            <!-- Table with stripped rows -->
+            <div style="overflow-x: auto;">
+            <table class="table datatable">
+              <thead>
+                <tr>
+                  <th>
+                    <b>N</b>ama Mahasiswa
+                  </th>
+                  <th>Jurusan</th>
+                  <th>Prodi</th>
+                  <th>Pekerjaan Ayah</th>
+                  <th>Pekejaan Ibu</th>
+                  <th>Penghasilan Ayah</th>
+                  <th>Penghasilan Ibu</th>
+                  <th>Status Ayah</th>
+                  <th>Status Ibu</th>
+                  <th>Jumlah Kendaraan Roda Empat </th>
+                  <th>Jumlah Kendaraan Roda Dua</th>
+                  <th>Jumlah Tanggungan</th>
+                  <th>Biaya Listrik Bulanan</th>
+                  <th>Watt Listrik</th>
+                  <th>Sumber Air</th>
+                  <th>Kondisi Rumah</th>
+                  <th>Kepemilikan Rumah</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Al Khaidar</td>
+                  <td>TIK</td>
+                  <td>Teknik Informatika</td>
+                  <td>Pensiunan</td>
+                  <td>IRT</td>
+                  <td>1 Juta</td>
+                  <td>Meninggal</td>
+                  <td>Hidup</td>
+                  <td>0</td>
+                  <td>0</td>
+                  <td>1</td>
+                  <td>4</td>
+                  <td>100 rb</td>
+                  <td>300 watt</td>
+                  <td>PAM</td>
+                  <td>Baik</td>
+                  <td>Pribadi</td>
+                  <td><button type="button" class="btn btn-warning"><i class="bi bi-pencil"></i></button>
+                    <button type="button" class="btn btn-danger"><i class="bi bi-trash"></i></button>
+                </td>
+                </tr>
+              </tbody>
+            </table>
+            <!-- End Table with stripped rows -->
+
+          </div>
+        </div>
+
+      </div>
+  </section>
+{% endblock %}

@@ -1,0 +1,119 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+
+<div class="pagetitle">
+    <h1>Klasifikasi</h1>
+    <nav>
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="">Home</a></li>
+        <li class="breadcrumb-item active">Klasifikasi UKT</li>
+      </ol>
+    </nav>
+  </div><!-- End Page Title -->
+
+<section class="section">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Upload Klasifikasi UKT</h5>
+            <!-- General Form Elements -->
+            <form>
+              <div class="row mb-3">
+                  <div class="col-sm-10"> <!-- Mengubah ukuran kolom menjadi 10 -->
+                      <div class="input-group">
+                          <input class="form-control" type="file" id="formFile">
+                      </div>
+                  </div>
+                  <div class="col-sm-2"> <!-- Mengubah ukuran kolom menjadi 2 -->
+                      <div class="input-group">
+                          <button class="btn btn-primary" type="submit">Submit</button>
+                      </div>
+                  </div>
+              </div>
+          </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <section class="section">
+      <div class="col-lg-12">
+          <div class="card">
+            <div class="card-body" style="overflow-x: auto;">
+              <h5 class="card-title">Data UKT Mahasiswa</h5>
+              <!-- Table with stripped rows -->
+              <div style="overflow-x: auto;">
+              <table class="table datatable">
+                <thead>
+                  <tr>
+                    <th>
+                      <b>N</b>ama Mahasiswa
+                    </th>
+                    <th>Jurusan</th>
+                    <th>Prodi</th>
+                    <th>Pekerjaan Ayah</th>
+                    <th>Pekejaan Ibu</th>
+                    <th>Penghasilan Ayah</th>
+                    <th>Penghasilan Ibu</th>
+                    <th>Status Ayah</th>
+                    <th>Status Ibu</th>
+                    <th>Jumlah Kendaraan Roda Empat </th>
+                    <th>Jumlah Kendaraan Roda Dua</th>
+                    <th>Jumlah Tanggungan</th>
+                    <th>Biaya Listrik Bulanan</th>
+                    <th>Watt Listrik</th>
+                    <th>Sumber Air</th>
+                    <th>Kondisi Rumah</th>
+                    <th>Kepemilikan Rumah</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Al Khaidar</td>
+                    <td>TIK</td>
+                    <td>Teknik Informatika</td>
+                    <td>Pensiunan</td>
+                    <td>IRT</td>
+                    <td>1 Juta</td>
+                    <td>Meninggal</td>
+                    <td>Hidup</td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td>1</td>
+                    <td>4</td>
+                    <td>100 rb</td>
+                    <td>300 watt</td>
+                    <td>PAM</td>
+                    <td>Baik</td>
+                    <td>Pribadi</td>
+                    <td><button type="button" class="btn btn-warning"><i class="bi bi-pencil"></i></button>
+                      <button type="button" class="btn btn-danger"><i class="bi bi-trash"></i></button>
+                  </td>
+                  </tr>
+                </tbody>
+              </table>
+              <!-- End Table with stripped rows -->
+  
+            </div>
+          </div>
+  
+        </div>
+    </section>
+    
+    <div class="card">
+      <div class="card-body">
+          <form>
+              <div class="mb-3">
+              </div>
+              <div class="text-center">
+                  <button class="btn btn-primary" type="submit">Klasifikasi</button>
+              </div>
+          </form>
+      </div>
+  </div>
+  
+      
+  {% endblock %}
