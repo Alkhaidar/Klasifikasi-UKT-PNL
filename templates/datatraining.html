@@ -11,9 +11,59 @@
     </nav>
   </div><!-- End Page Title -->
 
-  <button type="button" class="btn btn-primary mb-2">
-    <span class="badge bg-primary"><i class="bi bi-plus" ></i>Data Training</span> 
+<!-- Button untuk menampilkan modal form tambah -->
+<button id="tambahButton" type="button" class="btn btn-primary mb-2" data-bs-toggle="modal" data-bs-target="#tambahModal">
+  <span class="badge bg-primary"><i class="bi bi-plus"></i>Data Training</span> 
 </button>
+
+<!-- Modal form tambah -->
+<div class="modal fade" id="tambahModal" tabindex="-1" aria-labelledby="tambahModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title text-primary font-weight-bold" id="tambahModalLabel">Tambah Data Training</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+              <!-- Isi formulir tambah di sini -->
+              <form>
+                <div class="row mb-3">
+                    <div class="col-sm-12"> 
+                        <div class="input-group">
+                            <input class="form-control" type="file" id="formFile" accept=".csv">
+                        </div>
+                    </div>
+                    <div class="col-sm-12 text-secondary"> 
+                      <i class="bi bi-info-circle-fill text-info me-1"></i> File harus memiliki ekstensi .csv
+                  </div>                  
+                </div>
+                <div class="row mb-2 justify-content-end">
+                  <div class="col-sm-auto me-1"> 
+                      <button type="reset" class="btn btn-secondary">
+                          <i class="bi bi-arrow-counterclockwise me-1"></i> Reset
+                      </button>
+                      <button type="submit" class="btn btn-primary">
+                          <i class="bi bi-cloud-upload me-1"></i> Upload
+                      </button>
+                  </div>
+              </div>
+              </div>
+            </form>           
+          </div>
+      </div>
+  </div>
+</div>
+
+<script>
+  // Menangani klik tombol tambah
+  document.getElementById('tambahButton').addEventListener('click', function() {
+      // Kosongkan form tambah sebelum menampilkannya
+      document.getElementById('formTambah').reset();
+  });
+</script>
+
+
+
 
 <section class="section">
   <div class="col-lg-12">

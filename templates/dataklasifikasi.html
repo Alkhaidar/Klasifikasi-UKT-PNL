@@ -38,17 +38,25 @@
                 <td>Teknik Informatika</td>
                 <td>UKT Kelompok 3</td>
                 <td>2 Juta</td>
-                <td><button type="button" class="btn btn-danger"><i class="bi bi-trash"></i></button></td>
+                <td><button type="button" class="btn btn-danger delete-btn" onclick="confirmDelete()"><i class="bi bi-trash"></i></button></td>
               </tr>
             </tbody>
           </table>
           <!-- End Table with stripped rows -->
-
         </div>
       </div>
-
     </div>
 </section>
 
-
+<script>
+  function confirmDelete() {
+    if (confirm("Apakah Anda yakin ingin menghapus data ini?")) {
+      // Tindakan penghapusan akan dilakukan di sini
+      alert("Data telah dihapus"); // Contoh: Anda dapat menggantinya dengan tindakan penghapusan sesungguhnya
+    } else {
+      // Pengguna membatalkan penghapusan
+      // Tidak ada tindakan yang diambil
+    }
+  }
+</script>
 {% endblock %}

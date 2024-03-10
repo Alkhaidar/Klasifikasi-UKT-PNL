@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request, redirect, url_for
 app = Flask(__name__)
 
 @app.route ('/')
@@ -24,6 +24,10 @@ def dataklasifikasi ():
 @app.route ('/klasifikasi')
 def klasifikasi ():
     return render_template('klasifikasi.html')
+
+@app.route ('/login')
+def logout ():
+    return render_template('login.html')
 
 if __name__ == "__main__":
     app.run(debug=True)

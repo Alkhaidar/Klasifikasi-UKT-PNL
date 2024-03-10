@@ -11,9 +11,73 @@
       </ol>
     </nav>
 </div><!-- End Page Title -->
-<button type="button" class="btn btn-primary mb-2">
-    <span class="badge bg-primary"><i class="bi bi-person"></i> Tambah</span>
+
+<!-- Button untuk menampilkan modal form tambah -->
+<button id="tambahButton" type="button" class="btn btn-primary mb-2" data-bs-toggle="modal" data-bs-target="#tambahModal">
+  <span class="badge bg-primary"><i class="bi bi-person"></i>User</span> 
 </button>
+
+<!-- Modal form tambah -->
+<div class="modal fade" id="tambahModal" tabindex="-1" aria-labelledby="tambahModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title text-primary font-weight-bold" id="tambahModalLabel">Register User</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+              <!-- Isi formulir tambah di sini -->
+              <form>
+                <div class="row mb-3">
+                    <div class="col-sm-12">
+                        <label for="namaLengkap" class="form-label">Nama Lengkap</label>
+                        <input type="text" class="form-control" id="namaLengkap" placeholder="Masukkan Nama Lengkap">
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-12">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="email" placeholder="Masukkan Email">
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-12">
+                        <label for="username" class="form-label">Username</label>
+                        <input type="text" class="form-control" id="username" placeholder="Masukkan Username">
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-12">
+                        <label for="password" class="form-label">Password</label>
+                        <input type="password" class="form-control" id="password" placeholder="Masukkan Password">
+                    </div>
+                </div>
+                <div class="row mb-3">
+                </div>
+                <div class="row mb-2 justify-content-end">
+                    <div class="col-sm-auto me-1">
+                        <button type="reset" class="btn btn-secondary">
+                            <i class="bi bi-arrow-counterclockwise me-1"></i> Reset
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-person-plus me-1"></i> Tambah User
+                        </button>
+                    </div>
+                </div>
+            </form>
+                    
+          </div>
+      </div>
+  </div>
+</div>
+
+<script>
+  // Menangani klik tombol tambah
+  document.getElementById('tambahButton').addEventListener('click', function() {
+      // Kosongkan form tambah sebelum menampilkannya
+      document.getElementById('formTambah').reset();
+  });
+</script>
 
 
 <section class="section">
