@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, session
+from flask import Flask, render_template, request, redirect, url_for, session, flash
 from flask_mysqldb import MySQL
 
 app = Flask(__name__)
@@ -38,9 +38,52 @@ def login ():
     return render_template('login.html')
 
 
+@app.route ('/insert', methods = ['POST'])
+def insert():
+
+    if request.method == "POST": 
+        flash("Register Berhasil")
+
+        nama = request.form ['nama']
+        email = request.form ['email']
+        username = request.form ['username']
+        password = request.form ['password']
+        
+        cur = mysql.connection.cursor()
+        cur.execute ("INSERT into tbl_users (nama, email, username, password) VALUES (%s, %s, %s, %s)", ( nama, email, username, password))
+        mysql.connection.commit()
+        return redirect(url_for('user'))
+
+@app.route('/delete/<string:id_data>', methods = ['POST','PUT','DELETE'])
+def delateuser(id_data):
+    if(request.form['_method'] == 'PUT'):
+        username = request.form['username']
+        cur = mysql.connection.cursor()
+        cur.execute("DELETE FROM tbl_users WHERE id = %s", (id_data))
+        mysql.connection.commit()
+        cur.close()
+
+        return redirect (url_for('user'))
+    elif(request.form['_method'] == 'DELETE'):
+        cur = mysql.connection.cursor()
+        cur.execute("DELETE FROM tbl_users WHERE id = %s", (id_data))
+
+        mysql.connection.commit()
+        cur.close()
+
+
+
+
+
 @app.route ('/user')
 def user ():
-    return render_template('user.html')
+
+    cur = mysql.connection.cursor()
+    cur.execute ("SELECT * From tbl_users")
+    data =cur.fetchall()
+    cur.close()
+
+    return render_template('user.html', tbl_users = data)
 
 @app.route ('/datatraining')
 def datatraining ():
