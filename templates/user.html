@@ -32,25 +32,25 @@
                 <div class="row mb-3">
                     <div class="col-sm-12">
                         <label for="namaLengkap" class="form-label">Nama Lengkap</label>
-                        <input type="text" name="nama" class="form-control" id="namaLengkap" placeholder="Masukkan Nama Lengkap">
+                        <input required  type="text" name="nama" class="form-control" id="namaLengkap" placeholder="Masukkan Nama Lengkap">
                     </div>
                 </div>
                 <div class="row mb-3">
                     <div class="col-sm-12">
                         <label for="email" class="form-label">Email</label>
-                        <input type="email" name="email" class="form-control" id="email" placeholder="Masukkan Email">
+                        <input required  type="email" name="email" class="form-control" id="email" placeholder="Masukkan Email">
                     </div>
                 </div>
                 <div class="row mb-3">
                     <div class="col-sm-12">
                         <label for="username" class="form-label">Username</label>
-                        <input type="text" name="username"  class="form-control" id="username" placeholder="Masukkan Username">
+                        <input required  type="text" name="username"  class="form-control" id="username" placeholder="Masukkan Username">
                     </div>
                 </div>
                 <div class="row mb-3">
                     <div class="col-sm-12">
                         <label for="password" class="form-label">Password</label>
-                        <input type="password" name="password" class="form-control" id="password" placeholder="Masukkan Password">
+                        <input required  type="password" name="password" class="form-control" id="password" placeholder="Masukkan Password">
                     </div>
                 </div>
                 <div class="row mb-3">
@@ -129,7 +129,7 @@
                                     <form action="/dashboard/user/reset/{{ row.1 }}" method="POST">
                                         <div class="modal-body">
                                             <div class="row">
-                                                <input type="hidden" name="id" value="{{ user.0 }}">
+                                                <input type="hidden" name="id" value="{{ row.0 }}">
                                                 <input type="hidden" name="_method" value="PUT">
                                                 <div class="mb-3">
                                                     <label for="password" class="form-label">Password
@@ -181,7 +181,7 @@
                          <form action="/delete/{{loop.index}}" method="'POST">
                              <div class="modal-body">
                                  <div class="row">
-                                     <input type="hidden" name="method" value="DELETE">
+                                     <input type="hidden" name="_method" value="DELETE">
                                      <p class="fs-6">Apakah Anda Yakin Menghapus User <b>{{row.1}}</b>?</p>
                                  </div>
                              </div>

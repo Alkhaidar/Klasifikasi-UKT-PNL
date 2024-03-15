@@ -57,7 +57,7 @@
       <ul class="d-flex align-items-center">
         <li class="nav-item pe-3">
           <a class="nav-link nav-profile d-flex align-items-center pe-10" href="#">
-            <span class="d-none d-md-block ps-2">Selamat Datang! Al Khaidar</span>
+            <span class="d-none d-md-block ps-2">Selamat Datang! {{nama}}</span>
           </a><!-- End Profile Image Icon -->
         </li>
       </ul>
@@ -72,38 +72,38 @@
  
     <ul class="sidebar-nav" id="sidebar-nav">
 
-      <li class="nav-item">
-        <a class="nav-link " href="/">
+      <li class="nav-item ">
+        <a class="nav-link {% if request.path == '/' %} {% else %} collapsed {% endif %}" href="/">
           <i class="bi bi-grid"></i>
           <span>Dashboard</span>
         </a>
       </li><!-- End Dashboard Nav -->
 
       <li class="nav-item">
-        <a class="nav-link collapsed" href="/datatraining">
+        <a class="nav-link {% if request.path == '/datatraining' %} {% else %} collapsed {% endif %}" href="/datatraining">
           <i class="bi bi-wrench"></i><span>Data Training</span>
         </a>
        
         <li class="nav-item">
-          <a class="nav-link collapsed" href="/datatesting">
+          <a class="nav-link {% if request.path == '/datatesting' %} {% else %} collapsed {% endif %}" href="/datatesting">
             <i class="bi bi-tools"></i><span>Data Testing</span>
           </a>
 
       <li class="nav-item">
-        <a class="nav-link collapsed"  href="/dataklasifikasi">
+        <a class="nav-link {% if request.path == '/dataklasifikasi' %} {% else %} collapsed {% endif %}"  href="/dataklasifikasi">
           <i class="bi bi-inboxes-fill"></i><span>Data Klasifikasi</span></i>
         </a>
      </li><!-- End Forms Nav -->
 
       <li class="nav-item">
-        <a class="nav-link collapsed" href="/klasifikasi">
+        <a class="nav-link {% if request.path == '/klasifikasi' %} {% else %} collapsed {% endif %}" href="/klasifikasi">
           <i class="bi bi-layout-text-window-reverse"></i><span>Klasifikasi</span></i>
         </a>
         
       </li><!-- End Tables Nav -->
     
       <li class="nav-item">
-        <a class="nav-link collapsed" href="/user">
+        <a class="nav-link {% if request.path == '/user' %} {% else %} collapsed {% endif %}" href="/user">
             <i class="bi bi-person"></i><span>Users</span>
         </a>
     </li><!-- End Charts Nav -->

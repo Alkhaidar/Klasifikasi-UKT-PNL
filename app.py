@@ -16,8 +16,8 @@ mysql = MySQL(app)
 
 @app.route ('/')
 def Index ():
-    if 'username' in session:
-        return render_template('dashboard.html', username=session['username'])
+    if 'nama' in session:
+        return render_template('dashboard.html', nama=session['nama'])
     else:
         return render_template('login.html')
 
@@ -27,11 +27,11 @@ def login ():
         username = request.form['username']
         pwd = request. form['password']
         cur = mysql.connection.cursor()
-        cur.execute(f"select username, password from tbl_users where username = '{username}'")
+        cur.execute(f"select username, nama, password from tbl_users where username = '{username}'")
         user = cur.fetchone()
         cur.close()
-        if user and pwd == user [1]:
-            session ['username'] = user[0]
+        if user and pwd == user [2]:
+            session ['nama'] = user[1]
             return redirect(url_for('Index'))
         else:
             return render_template('login.html',error='Invalid username or password')
@@ -40,10 +40,8 @@ def login ():
 
 @app.route ('/insert', methods = ['POST'])
 def insert():
-
     if request.method == "POST": 
         flash("Register Berhasil")
-
         nama = request.form ['nama']
         email = request.form ['email']
         username = request.form ['username']
@@ -62,19 +60,15 @@ def delateuser(id_data):
         cur.execute("DELETE FROM tbl_users WHERE id = %s", (id_data))
         mysql.connection.commit()
         cur.close()
-
+        
         return redirect (url_for('user'))
     elif(request.form['_method'] == 'DELETE'):
         cur = mysql.connection.cursor()
         cur.execute("DELETE FROM tbl_users WHERE id = %s", (id_data))
-
         mysql.connection.commit()
         cur.close()
-
-
-
-
-
+        return redirect (url_for('user'))
+    
 @app.route ('/user')
 def user ():
 
@@ -82,20 +76,22 @@ def user ():
     cur.execute ("SELECT * From tbl_users")
     data =cur.fetchall()
     cur.close()
+    return render_template('user.html', tbl_users = data, nama=session['nama'] )
+    
 
-    return render_template('user.html', tbl_users = data)
+
 
 @app.route ('/datatraining')
 def datatraining ():
-    return render_template('datatraining.html')
+    return render_template('datatraining.html', nama=session['nama'])
 
 @app.route ('/datatesting')
 def datatesting():
-    return render_template('datatesting.html')
+    return render_template('datatesting.html', nama=session['nama'])
 
 @app.route ('/dataklasifikasi')
 def dataklasifikasi ():
-    return render_template('dataklasifikasi.html')
+    return render_template('dataklasifikasi.html', nama=session['nama'])
 
 @app.route ('/klasifikasi')
 def klasifikasi ():
