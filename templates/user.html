@@ -5,118 +5,135 @@
 <div class="pagetitle">
     <h1>Users</h1>
     <nav>
-      <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-        <li class="breadcrumb-item active">Users</li>
-      </ol>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+            <li class="breadcrumb-item active">Users</li>
+        </ol>
     </nav>
 </div><!-- End Page Title -->
 
 <!-- Button untuk menampilkan modal form tambah -->
-<button id="tambahButton" type="button" class="btn btn-primary mb-2" data-bs-toggle="modal" data-bs-target="#tambahModal">
-  <span class="badge bg-primary"><i class="bi bi-person"></i>User</span> 
+<button id="tambahButton" type="button" class="btn btn-primary mb-2" data-bs-toggle="modal"
+    data-bs-target="#tambahModal">
+    <span class="badge bg-primary"><i class="bi bi-person"></i>User</span>
 </button>
 
 <!-- Modal form tambah -->
 <div class="modal fade" id="tambahModal" tabindex="-1" aria-labelledby="tambahModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title text-primary font-weight-bold" id="tambahModalLabel">Register User</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-primary font-weight-bold" id="tambahModalLabel">Register User</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
 
-              <!-- Isi formulir tambah di sini -->
-              <form action="{{url_for('insert')}}" method="POST">
-                <div class="row mb-3">
-                    <div class="col-sm-12">
-                        <label for="namaLengkap" class="form-label">Nama Lengkap</label>
-                        <input required  type="text" name="nama" class="form-control" id="namaLengkap" placeholder="Masukkan Nama Lengkap">
+                <!-- Isi formulir tambah di sini -->
+                <form action="{{url_for('insert')}}" method="POST">
+                    <div class="row mb-3">
+                        <div class="col-sm-12">
+                            <label for="namaLengkap" class="form-label">Nama Lengkap</label>
+                            <input required type="text" name="nama" class="form-control" id="namaLengkap"
+                                placeholder="Masukkan Nama Lengkap">
+                        </div>
                     </div>
-                </div>
-                <div class="row mb-3">
-                    <div class="col-sm-12">
-                        <label for="email" class="form-label">Email</label>
-                        <input required  type="email" name="email" class="form-control" id="email" placeholder="Masukkan Email">
+                    <div class="row mb-3">
+                        <div class="col-sm-12">
+                            <label for="email" class="form-label">Email</label>
+                            <input required type="email" name="email" class="form-control" id="email"
+                                placeholder="Masukkan Email">
+                        </div>
                     </div>
-                </div>
-                <div class="row mb-3">
-                    <div class="col-sm-12">
-                        <label for="username" class="form-label">Username</label>
-                        <input required  type="text" name="username"  class="form-control" id="username" placeholder="Masukkan Username">
+                    <div class="row mb-3">
+                        <div class="col-sm-12">
+                            <label for="username" class="form-label">Username</label>
+                            <input required type="text" name="username" class="form-control" id="username"
+                                placeholder="Masukkan Username">
+                        </div>
                     </div>
-                </div>
-                <div class="row mb-3">
-                    <div class="col-sm-12">
-                        <label for="password" class="form-label">Password</label>
-                        <input required  type="password" name="password" class="form-control" id="password" placeholder="Masukkan Password">
+                    <div class="row mb-3">
+                        <div class="col-sm-12">
+                            <label for="password" class="form-label">Password</label>
+                            <input required type="password" name="password" class="form-control" id="password"
+                                placeholder="Masukkan Password">
+                        </div>
                     </div>
-                </div>
-                <div class="row mb-3">
-                </div>
-                <div class="row mb-2 justify-content-end">
-                    <div class="col-sm-auto me-1">
-                        <button type="reset" class="btn btn-secondary">
-                            <i class="bi bi-arrow-counterclockwise me-1"></i> Reset
-                        </button>
-                        <button type="submit" class="btn btn-primary">
-                            <i class="bi bi-person-plus me-1"></i> Tambah User
-                        </button>
+                    <div class="row mb-3">
                     </div>
-                </div>
-            </form>
-                    
-          </div>
-      </div>
-  </div>
+                    <div class="row mb-2 justify-content-end">
+                        <div class="col-sm-auto me-1">
+                            <button type="reset" class="btn btn-secondary">
+                                <i class="bi bi-arrow-counterclockwise me-1"></i> Reset
+                            </button>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-person-plus me-1"></i> Tambah User
+                            </button>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
 </div>
 
 <script>
-  // Menangani klik tombol tambah
-  document.getElementById('tambahButton').addEventListener('click', function() {
-      // Kosongkan form tambah sebelum menampilkannya
-      document.getElementById('formTambah').reset();
-  });
+    // Menangani klik tombol tambah
+    document.getElementById('tambahButton').addEventListener('click', function () {
+        // Kosongkan form tambah sebelum menampilkannya
+        document.getElementById('formTambah').reset();
+    });
 </script>
 
-<section class="section">
-  <div class="row">
-    <div class="col-lg-12">
-      <div class="card">
-        <div class="card-body">
-          <h5 class="card-title">Data Users</h5>
 
-          <!-- Default Table -->
-          <table class="table">
-            <thead>
-              <tr>
-                <th scope="col">No</th>
-                <th scope="col">Nama</th>
-                <th scope="col">Email</th>
-                <th scope="col">Username</th>
-                <th scope="col">Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for row in tbl_users %}
-                <tr>
-                  <td>{{loop.index}}</td>
-                  <td>{{row.1}}</td>
-                  <td>{{row.2}}</td>
-                  <td>{{row.3}}</td>
-                  <td>
-                      <button type="button" class="btn btn-sm btn-dark" data-bs-toggle="modal"
-                          data-bs-target="#modalResetPassword{{ loop.index }}">
-                          <i class="bi bi-unlock"></i>
-                      </button>
-                      <button class="btn btn-sm btn-danger" data-bs-toggle="modal"
-                          data-bs-target="#modalHapus{{ loop.index }}">
-                          <i class="bi bi-trash"></i>
-                      </button>
-                  </td>
-                </tr>
-                 <!-- modal reset password -->
+
+<section class="section">
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-success alert-dismissible fade show mb-2" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Data User</h5>
+                <!-- Table with stripped rows -->
+                <table id="myTable" class="table responsive nowrap table-bordered table-striped align-middle"
+                    style="width:100%">
+                    <thead>
+                        <tr>
+                            <th scope="col">No</th>
+                            <th scope="col">Nama</th>
+                            <th scope="col">Email</th>
+                            <th scope="col">Username</th>
+                            <th scope="col">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in tbl_users %}
+                        <tr>
+                            <td>{{loop.index}}</td>
+                            <td>{{row.1}}</td>
+                            <td>{{row.2}}</td>
+                            <td>{{row.3}}</td>
+                            <td>
+                                <button type="button" class="btn btn-dark" data-bs-toggle="modal"
+                                    data-bs-target="#modalResetPassword{{ loop.index }}">
+                                    <i class="bi bi-unlock"></i>
+                                </button>
+                                <button class="btn btn-danger" data-bs-toggle="modal"
+                                    data-bs-target="#modalHapus{{ loop.index }}">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        <!-- modal reset password -->
                         <div class="modal fade" id="modalResetPassword{{ loop.index }}" tabindex="-1"
                             aria-labelledby="exampleModalLabel" aria-hidden="true">
                             <div class="modal-dialog">
@@ -126,7 +143,7 @@
                                         <button type="button" class="btn-close" data-bs-dismiss="modal"
                                             aria-label="Close"></button>
                                     </div>
-                                    <form action="/dashboard/user/reset/{{ row.1 }}" method="POST">
+                                    <form action="/user/reset/{{ row.0 }}" method="POST">
                                         <div class="modal-body">
                                             <div class="row">
                                                 <input type="hidden" name="id" value="{{ row.0 }}">
@@ -168,42 +185,42 @@
                         </div>
                         <!-- end modal reset password -->
 
-                 <!-- modal hapus -->
-                 <div class="modal fade" id="modalHapus{{ loop.index }}" tabindex="-1"
-                 aria-labelledby="exampleModalLabel" aria-hidden="true">
-                 <div class="modal-dialog">
-                     <div class="modal-content">
-                         <div class="modal-header">
-                             <h5 class="modal-title" id="exampleModalLabel">Delete User</h5>
-                             <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                 aria-label="Close"></button>
-                         </div>
-                         <form action="/delete/{{loop.index}}" method="'POST">
-                             <div class="modal-body">
-                                 <div class="row">
-                                     <input type="hidden" name="_method" value="DELETE">
-                                     <p class="fs-6">Apakah Anda Yakin Menghapus User <b>{{row.1}}</b>?</p>
-                                 </div>
-                             </div>
-                             <div class="modal-footer">
-                                 <button type="button" class="btn btn-secondary"
-                                     data-bs-dismiss="modal">Cancel</button>
-                                 <button type="submit" class="btn btn-outline-danger">Delete User</button>
-                             </div>
-                         </form>
-                     </div>
-                 </div>
-             </div>
-             <!-- end modal hapus -->
-                {% endfor %}
-              </tbody>
-            </table>
-            <!-- End Table with stripped rows -->
-          </div>
+                        <!-- modal hapus -->
+                        <div class="modal fade" id="modalHapus{{ loop.index }}" tabindex="-1"
+                            aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Delete User</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                    </div>
+                                    <form action="/delete/{{ row.0 }}" method="POST">
+                                        <div class="modal-body">
+                                            <div class="row">
+                                                <input type="hidden" name="_method" value="DELETE">
+                                                <p class="fs-6">Apakah Anda Yakin Menghapus User <b>{{row.1}}</b>?</p>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary"
+                                                data-bs-dismiss="modal">Cancel</button>
+                                            <button type="submit" class="btn btn-outline-danger">Delete User</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- end modal hapus -->
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <!-- End Table with stripped rows -->
+            </div>
         </div>
-      </div>
     </div>
-  </section>
-  
+    </div>
+</section>
+
 
 {% endblock %}

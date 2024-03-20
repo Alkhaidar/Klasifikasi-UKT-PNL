@@ -2,134 +2,133 @@
 
 {% block content %}
 <div class="pagetitle">
-    <h1>Data Training</h1>
-    <nav>
-      <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="">Home</a></li>
-        <li class="breadcrumb-item active">Data Training</li>
-      </ol>
-    </nav>
-  </div><!-- End Page Title -->
+  <h1>Data Training</h1>
+  <nav>
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="">Home</a></li>
+      <li class="breadcrumb-item active">Data Training</li>
+    </ol>
+  </nav>
+</div><!-- End Page Title -->
 
 <!-- Button untuk menampilkan modal form tambah -->
-<button id="tambahButton" type="button" class="btn btn-primary mb-2" data-bs-toggle="modal" data-bs-target="#tambahModal">
-  <span class="badge bg-primary"><i class="bi bi-plus"></i>Data Training</span> 
+<button id="tambahButton" type="button" class="btn btn-primary mb-2" data-bs-toggle="modal"
+  data-bs-target="#tambahModal">
+  <span class="badge bg-primary"><i class="bi bi-plus"></i>Data Training</span>
 </button>
 
 <!-- Modal form tambah -->
 <div class="modal fade" id="tambahModal" tabindex="-1" aria-labelledby="tambahModalLabel" aria-hidden="true">
   <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title text-primary font-weight-bold" id="tambahModalLabel">Tambah Data Training</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title text-primary font-weight-bold" id="tambahModalLabel">Tambah Data Training</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-              <!-- Isi formulir tambah di sini -->
-              <form>
-                <div class="row mb-3">
-                    <div class="col-sm-12"> 
-                        <div class="input-group">
-                            <input class="form-control" type="file" id="formFile" accept=".csv">
-                        </div>
-                    </div>
-                    <div class="col-sm-12 text-secondary"> 
-                      <i class="bi bi-info-circle-fill text-info me-1"></i> File harus memiliki ekstensi .csv
-                  </div>                  
-                </div>
-                <div class="row mb-2 justify-content-end">
-                  <div class="col-sm-auto me-1"> 
-                      <button type="reset" class="btn btn-secondary">
-                          <i class="bi bi-arrow-counterclockwise me-1"></i> Reset
-                      </button>
-                      <button type="submit" class="btn btn-primary">
-                          <i class="bi bi-cloud-upload me-1"></i> Upload
-                      </button>
-                  </div>
+        <!-- Isi formulir tambah di sini -->
+        <form>
+          <div class="row mb-3">
+            <div class="col-sm-12">
+              <div class="input-group">
+                <input class="form-control" type="file" id="formFile" accept=".csv">
               </div>
-              </div>
-            </form>           
+            </div>
+            <div class="col-sm-12 text-secondary">
+              <i class="bi bi-info-circle-fill text-info me-1"></i> File harus memiliki ekstensi .csv
+            </div>
+          </div>
+          <div class="row mb-2 justify-content-end">
+            <div class="col-sm-auto me-1">
+              <button type="reset" class="btn btn-secondary">
+                <i class="bi bi-arrow-counterclockwise me-1"></i> Reset
+              </button>
+              <button type="submit" class="btn btn-primary">
+                <i class="bi bi-cloud-upload me-1"></i> Upload
+              </button>
+            </div>
           </div>
       </div>
+      </form>
+    </div>
   </div>
 </div>
-
-<script>
-  // Menangani klik tombol tambah
-  document.getElementById('tambahButton').addEventListener('click', function() {
-      // Kosongkan form tambah sebelum menampilkannya
-      document.getElementById('formTambah').reset();
-  });
-</script>
-
-
-
+</div>
 
 <section class="section">
   <div class="col-lg-12">
-        <div class="card">
-          <div class="card-body" style="overflow-x: auto;">
-            <h5 class="card-title">Data Training</h5>
-            <!-- Table with stripped rows -->
-            <div style="overflow-x: auto;">
-            <table class="table datatable">
-              <thead>
-                <tr>
-                  <th>
-                    <b>N</b>ama Mahasiswa
-                  </th>
-                  <th>Jurusan</th>
-                  <th>Prodi</th>
-                  <th>Pekerjaan Ayah</th>
-                  <th>Pekejaan Ibu</th>
-                  <th>Penghasilan Ayah</th>
-                  <th>Penghasilan Ibu</th>
-                  <th>Status Ayah</th>
-                  <th>Status Ibu</th>
-                  <th>Jumlah Kendaraan Roda Empat </th>
-                  <th>Jumlah Kendaraan Roda Dua</th>
-                  <th>Jumlah Tanggungan</th>
-                  <th>Biaya Listrik Bulanan</th>
-                  <th>Watt Listrik</th>
-                  <th>Sumber Air</th>
-                  <th>Kondisi Rumah</th>
-                  <th>Kepemilikan Rumah</th>
-                  <th>UKT</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Al Khaidar</td>
-                  <td>TIK</td>
-                  <td>Teknik Informatika</td>
-                  <td>Pensiunan</td>
-                  <td>IRT</td>
-                  <td>1 Juta</td>
-                  <td>0</td>
-                  <td>0</td>
-                  <td>1</td>
-                  <td>4</td>
-                  <td>Meninggal</td>
-                  <td>Hidup</td>
-                  <td>100 rb</td>
-                  <td>300 watt</td>
-                  <td>PAM</td>
-                  <td>Baik</td>
-                  <td>Pribadi</td>
-                  <td>Kelompok 2</td>
-                  <td><button type="button" class="btn btn-warning me-1">
-                    <i class="bi bi-pencil"></i>
-                  </button>
-                  <button type="button" class="btn btn-danger">
-                    <i class="bi bi-trash"></i> </td>
-                </tr>
-              </tbody>
-            </table>
-            <!-- End Table with stripped rows -->
-          </div>
-        </div>
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Data Training</h5>
+        <!-- Table with stripped rows -->
+
+        <table id="myTable" class="table responsive nowrap table-bordered table-striped align-middle"
+          style="width:100%">
+          <thead>
+            <tr>
+              <th>
+                <b>N</b>ama Mahasiswa
+              </th>
+              <th>Jurusan</th>
+              <th>Prodi</th>
+              <th>Pekerjaan Ayah</th>
+              <th>Pekejaan Ibu</th>
+              <th>Penghasilan Ayah</th>
+              <th>Penghasilan Ibu</th>
+              <th>Status Ayah</th>
+              <th>Status Ibu</th>
+              <th>Jumlah Kendaraan Roda Empat </th>
+              <th>Jumlah Kendaraan Roda Dua</th>
+              <th>Jumlah Tanggungan</th>
+              <th>Biaya Listrik Bulanan</th>
+              <th>Watt Listrik</th>
+              <th>Sumber Air</th>
+              <th>Kondisi Rumah</th>
+              <th>Kepemilikan Rumah</th>
+              <th>UKT</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Al Khaidar</td>
+              <td>TIK</td>
+              <td>Teknik Informatika</td>
+              <td>Pensiunan</td>
+              <td>IRT</td>
+              <td>1 Juta</td>
+              <td>0</td>
+              <td>0</td>
+              <td>1</td>
+              <td>4</td>
+              <td>Meninggal</td>
+              <td>Hidup</td>
+              <td>100 rb</td>
+              <td>300 watt</td>
+              <td>PAM</td>
+              <td>Baik</td>
+              <td>Pribadi</td>
+              <td>Kelompok 2</td>
+              <td><button type="button" class="btn btn-warning me-1">
+                  <i class="bi bi-pencil"></i>
+                </button>
+                <button type="button" class="btn btn-danger">
+                  <i class="bi bi-trash"></i>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <!-- End Table with stripped rows -->
       </div>
     </div>
-  </section>
+  </div>
+</section>
+
+<script>
+  // Menangani klik tombol tambah
+  document.getElementById('tambahButton').addEventListener('click', function () {
+    // Kosongkan form tambah sebelum menampilkannya
+    document.getElementById('formTambah').reset();
+  });
+</script>
 {% endblock %}

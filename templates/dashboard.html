@@ -3,18 +3,19 @@
 {% block content %}
 
 <div class="pagetitle">
-    <h1>Dashboard</h1>
-    <nav>
-      <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-        <li class="breadcrumb-item active">Dashboard</li>
-      </ol>
-    </nav>
+  <h1>Dashboard</h1>
+  <nav>
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+      <li class="breadcrumb-item active">Dashboard</li>
+    </ol>
+  </nav>
 </div><!-- End Page Title -->
 
 <div class="alert alert-success alert-dismissible fade show" role="alert">
   <div class="card-body text-center">
-    <h4 class="alert-heading">Selamat Datang Di Sistem Klasifikasi UKT Mahasiswa Politeknik Negeri Lhokseumawe Menggunakan Metode Random Forest</h4>
+    <h4 class="alert-heading">Selamat Datang Di Sistem Klasifikasi UKT Mahasiswa Politeknik Negeri Lhokseumawe
+      Menggunakan Metode Random Forest</h4>
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
   </div>
 </div>
@@ -27,27 +28,27 @@
     <div class="col-lg-15">
       <div class="row">
 
-          <!-- TRANING Card -->
-          <div class="col-xxl-4 col-md-6">
-            <div class="card info-card sales-card">            
-              <div class="card-body w-100">
-                <h5 class="card-title">Data Training <span>| Jumlah </span></h5>
-                <div class="d-flex align-items-center">
-                  <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                    <i class="bi bi-wrench"></i>
-              
-                  </div>
-                  <div class="ps-3">
-                    <h6>1500</h6>
-                  </div>
+        <!-- TRANING Card -->
+        <div class="col-xxl-4 col-md-6">
+          <div class="card info-card sales-card">
+            <div class="card-body w-100">
+              <h5 class="card-title">Data Training <span>| Jumlah </span></h5>
+              <div class="d-flex align-items-center">
+                <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                  <i class="bi bi-wrench"></i>
+
+                </div>
+                <div class="ps-3">
+                  <h6>1500</h6>
                 </div>
               </div>
             </div>
-          </div><!-- End TESTING Card -->
+          </div>
+        </div><!-- End TESTING Card -->
 
         <!-- TESTING Card -->
         <div class="col-xxl-4 col-md-6">
-          <div class="card info-card revenue-card">              
+          <div class="card info-card revenue-card">
             <div class="card-body">
               <h5 class="card-title">Data Testing <span>| Jumlah</span></h5>
               <div class="d-flex align-items-center">
@@ -64,7 +65,7 @@
 
         <!-- KLASIFIKASI Card -->
         <div class="col-xxl-4 col-xl-12">
-          <div class="card info-card customers-card">           
+          <div class="card info-card customers-card">
             <div class="card-body">
               <h5 class="card-title">Data Klasifikasi <span>| Jumlah</span></h5>
               <div class="d-flex align-items-center">
@@ -85,37 +86,61 @@
   </div><!-- End Row -->
   <div class="card">
     <div class="card-body">
-        <h5 class="card-title"><i class="bi bi-info-circle"></i> Informasi Sistem</h5>
+      <h5 class="card-title"><i class="bi bi-info-circle"></i> Informasi Sistem</h5>
 
       <!-- Default Tabs -->
       <ul class="nav nav-tabs d-flex" id="myTabjustified" role="tablist">
         <li class="nav-item flex-fill" role="presentation">
-          <button class="nav-link w-100 active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home-justified" type="button" role="tab" aria-controls="home" aria-selected="true">Random Forest</button>
+          <button class="nav-link w-100 active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home-justified"
+            type="button" role="tab" aria-controls="home" aria-selected="true">Random Forest</button>
         </li>
         <li class="nav-item flex-fill" role="presentation">
-          <button class="nav-link w-100" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile-justified" type="button" role="tab" aria-controls="profile" aria-selected="false">UKT PNL</button>
+          <button class="nav-link w-100" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile-justified"
+            type="button" role="tab" aria-controls="profile" aria-selected="false">UKT PNL</button>
         </li>
-      
+
       </ul>
       <div class="tab-content pt-2" id="myTabjustifiedContent">
         <div class="tab-pane fade show active" id="home-justified" role="tabpanel" aria-labelledby="home-tab">
           <p style="text-align: justify;">
-            Metode Random Forest adalah salah satu teknik dalam bidang machine learning yang populer dan efektif untuk melakukan klasifikasi dan regresi pada data. Metode ini pertama kali diperkenalkan oleh Leo Breiman dan Adele Cutler pada tahun 2001. Random Forest menggabungkan konsep dari dua teknik lainnya, yaitu Bagging (Bootstrap Aggregating) dan Decision Tree.
-            Pada dasarnya, Random Forest membangun sejumlah besar pohon keputusan (decision trees) selama proses pelatihan. Setiap pohon keputusan dibangun secara acak dengan menggunakan subset acak dari data pelatihan dan subset acak dari fitur-fitur yang tersedia. Proses pembangunan pohon dilakukan secara independen satu sama lain.
-            Ketika suatu data baru diinputkan ke dalam model Random Forest yang telah dilatih, setiap pohon dalam model memberikan prediksi kelas atau nilai regresi. Kemudian, hasil prediksi dari setiap pohon digunakan untuk menentukan hasil akhir dengan cara mayoritas pemungutan suara (klasifikasi) atau rata-rata (regresi).
-            Keunggulan Metode Random Forest antara lain adalah kemampuannya untuk mengatasi masalah overfitting (kelebihan penyesuaian) yang umum terjadi pada Decision Tree tunggal. Selain itu, Random Forest juga dapat menangani dataset dengan fitur yang sangat banyak dan cocok untuk berbagai jenis masalah dalam machine learning.
+            Metode Random Forest adalah salah satu teknik dalam bidang machine learning yang populer dan efektif untuk
+            melakukan klasifikasi dan regresi pada data. Metode ini pertama kali diperkenalkan oleh Leo Breiman dan
+            Adele Cutler pada tahun 2001. Random Forest menggabungkan konsep dari dua teknik lainnya, yaitu Bagging
+            (Bootstrap Aggregating) dan Decision Tree.
+            Pada dasarnya, Random Forest membangun sejumlah besar pohon keputusan (decision trees) selama proses
+            pelatihan. Setiap pohon keputusan dibangun secara acak dengan menggunakan subset acak dari data pelatihan
+            dan subset acak dari fitur-fitur yang tersedia. Proses pembangunan pohon dilakukan secara independen satu
+            sama lain.
+            Ketika suatu data baru diinputkan ke dalam model Random Forest yang telah dilatih, setiap pohon dalam model
+            memberikan prediksi kelas atau nilai regresi. Kemudian, hasil prediksi dari setiap pohon digunakan untuk
+            menentukan hasil akhir dengan cara mayoritas pemungutan suara (klasifikasi) atau rata-rata (regresi).
+            Keunggulan Metode Random Forest antara lain adalah kemampuannya untuk mengatasi masalah overfitting
+            (kelebihan penyesuaian) yang umum terjadi pada Decision Tree tunggal. Selain itu, Random Forest juga dapat
+            menangani dataset dengan fitur yang sangat banyak dan cocok untuk berbagai jenis masalah dalam machine
+            learning.
           </p>
         </div>
-      
-        
+
+
         <div class="tab-pane fade" id="profile-justified" role="tabpanel" aria-labelledby="profile-tab">
           <p style="text-align: justify;">
-          Uang Kuliah Tunggal (UKT) telah menjadi topik yang cukup diperbincangkan dalam ranah pendidikan tinggi di Indonesia. Sistem ini diperkenalkan sebagai alternatif pembayaran biaya pendidikan yang lebih terstruktur dan transparan. UKT didasarkan pada prinsip keadilan sosial, di mana biaya pendidikan ditetapkan berdasarkan kemampuan ekonomi mahasiswa. Hal ini diharapkan dapat memberikan kesempatan yang lebih adil bagi semua individu untuk mengakses pendidikan tinggi tanpa terbebani oleh biaya yang berlebihan.
-          Politeknik Negeri Lhokseumawe adalah sebuah perguruan tinggi di Provinsi Aceh yang telah berdiri sejak tahun 1985. PNL menyediakan berbagai pilihan studi yang sesuai dengan minat dan bakat calon mahasiswa/mahasiswi, seperti teknik mesin, teknik sipil, teknik elektro, teknik kimia, dan sebagainya.
-          Politeknik Negeri Lhokseumawe merupakan perguruan tinggi negeri di lingkungan Kementerian Riset, Teknologi, dan Pendidikan Tinggi yang berkedudukan di Kota Lhokseumawe, Provinsi Aceh. Politeknik Negeri  Lhokseumawe menerapkan sistem Uang Kuliah Tunggal (UKT) pada tanggal 22 oktober 2020 sebagai metode pembayaran biaya pendidikan. Dalam penerapan UKT di Politeknik Negeri Lhokseumawe, biaya kuliah dibagi menjadi 8  kelompok, yakni Kelompok I, Kelompok II, Kelompok III, Kelompok IV, Kelompok V, Kelompok VI, Kelompok VII dan Kelompok VIII.
-        </p>
+            Uang Kuliah Tunggal (UKT) telah menjadi topik yang cukup diperbincangkan dalam ranah pendidikan tinggi di
+            Indonesia. Sistem ini diperkenalkan sebagai alternatif pembayaran biaya pendidikan yang lebih terstruktur
+            dan transparan. UKT didasarkan pada prinsip keadilan sosial, di mana biaya pendidikan ditetapkan berdasarkan
+            kemampuan ekonomi mahasiswa. Hal ini diharapkan dapat memberikan kesempatan yang lebih adil bagi semua
+            individu untuk mengakses pendidikan tinggi tanpa terbebani oleh biaya yang berlebihan.
+            Politeknik Negeri Lhokseumawe adalah sebuah perguruan tinggi di Provinsi Aceh yang telah berdiri sejak tahun
+            1985. PNL menyediakan berbagai pilihan studi yang sesuai dengan minat dan bakat calon mahasiswa/mahasiswi,
+            seperti teknik mesin, teknik sipil, teknik elektro, teknik kimia, dan sebagainya.
+            Politeknik Negeri Lhokseumawe merupakan perguruan tinggi negeri di lingkungan Kementerian Riset, Teknologi,
+            dan Pendidikan Tinggi yang berkedudukan di Kota Lhokseumawe, Provinsi Aceh. Politeknik Negeri Lhokseumawe
+            menerapkan sistem Uang Kuliah Tunggal (UKT) pada tanggal 22 oktober 2020 sebagai metode pembayaran biaya
+            pendidikan. Dalam penerapan UKT di Politeknik Negeri Lhokseumawe, biaya kuliah dibagi menjadi 8 kelompok,
+            yakni Kelompok I, Kelompok II, Kelompok III, Kelompok IV, Kelompok V, Kelompok VI, Kelompok VII dan Kelompok
+            VIII.
+          </p>
         </div>
-        </div><!-- End Default Tabs -->
+      </div><!-- End Default Tabs -->
 
     </div>
   </div>
