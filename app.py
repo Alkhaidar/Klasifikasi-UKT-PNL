@@ -111,12 +111,6 @@ def dataklasifikasi ():
     else:
         return render_template('login.html')
 
-@app.route ('/klasifikasi')
-def klasifikasi ():
-    if 'nama' in session:
-     return render_template('klasifikasi.html')
-    else:
-        return render_template('login.html')
     
 @app.route('/logout')
 def logout():
