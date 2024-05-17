@@ -23,21 +23,24 @@
           <thead>
             <tr>
               <th>No</th>
-              <th>Al Khaidar</th>
+              <th>Nama Mahasiswa</th>
+              <th>Jurusan</th>
+              <th>Prodi</th>
               <th>Nama UKT</th>
               <th>Jumlah UKT</th>
-              <th>Action</th>
             </tr>
           </thead>
           <tbody>
+            {% for row in tbl_datatesting %} 
             <tr>
-              <td>01</td>
-              <td>Al Khaidar</td>
-              <td>UKT Kelompok 3</td>
-              <td>2 Juta</td>
-              <td><button type="button" class="btn btn-danger delete-btn" onclick="confirmDelete()"><i
-                    class="bi bi-trash"></i></button></td>
+              <td>{{loop.index}}</td>
+              <td>{{row.1}}</td>
+              <td>{{row.2}}</td>
+              <td>{{row.3}}</td>
+              <td>{{ convertUKT(row.18) }}</td>
+              <td>Rp {{row.19}} </td>
             </tr>
+            {% endfor %}
           </tbody>
         </table>
         <!-- End Table with stripped rows -->

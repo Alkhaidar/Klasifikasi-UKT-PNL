@@ -293,7 +293,13 @@ app.jinja_env.globals.update(convertPA=convertPekerjaanAyah,convertPA1=convertPe
 @app.route ('/')
 def Index ():
     if 'nama' in session:
-        return render_template('dashboard.html', nama=session['nama'])
+        cur = mysql.connection.cursor()
+        cur.execute ('SELECT COUNT(*) FROM datatesting')
+        uji = cur.fetchone()
+        cur.execute ('SELECT COUNT(*) FROM datatraining')
+        latih = cur.fetchone()
+        cur.close()
+        return render_template('dashboard.html', nama=session['nama'], testing=uji[0], training=latih[0])
     else:
         return render_template('login.html')
 
@@ -438,29 +444,16 @@ def deletedatatraining(id_data):
 @app.route ('/datatesting', methods = ['GET'])
 def datatesting():
     if 'nama' in session:
-        return render_template('datatesting.html', nama=session['nama'])
+        cur = mysql.connection.cursor()
+        cur.execute ("SELECT * From datatesting")
+        data =cur.fetchall()
+        cur.close()
+        return render_template('datatesting.html', nama=session['nama'], tbl_datatesting = data)
     else:
         return render_template('login.html')
     
 @app.route ('/datatesting', methods = ['POST'])
 def postdatatesting():
-    nama = request.form['nama']
-    jurusan = request.form['jurusan']
-    prodi = request.form['prodi']
-    pekerjaan_ayah = int(request.form['pekerjaan_ayah'])
-    penghasilan_ayah = int(request.form['penghasilan_ayah'])
-    status_ayah = int(request.form['status_ayah'])
-    pekerjaan_ibu = int(request.form['pekerjaan_ibu'])
-    penghasilan_ibu = int(request.form['penghasilan_ibu'])
-    status_ibu = int(request.form['status_ibu'])
-    jumlah_tanggungan = int(request.form['jumlah_tanggungan'])
-    kepemilikan_rumah = int(request.form['kepemilikan_rumah'])
-    sumber_air = int(request.form['sumber_air'])
-    kendaraan_roda_4 = int(request.form['kendaraan_roda_4'])
-    kendaraan_roda_2 = int(request.form['kendaraan_roda_2'])
-    biaya_listrik = int(request.form['biaya_listrik'])
-    watt_listrik = int(request.form['watt_listrik'])
-    kondisi_rumah = int(request.form['watt_listrik'])
 
     cur = mysql.connection.cursor()
     cur.execute("SELECT pekerjaan_ayah, penghasilan_ayah, status_ayah, pekerjaan_ibu, penghasilan_ibu, status_ibu, jumlah_tanggungan_keluarga, kepemilikan_rumah, sumber_air, kendaraanroda_4, kendaraanroda_2, biaya_listrik, watt_listrik, kondisi_rumah, ukt FROM datatraining")
@@ -497,36 +490,186 @@ def postdatatesting():
     rf_classifier = RandomForestClassifier(n_estimators=100, random_state=42)
     rf_classifier.fit(X_train, y_train)
 
-    new_data1 = {
-        'pekerjaan_ayah': [pekerjaan_ayah],
-        'penghasilan_ayah': [penghasilan_ayah],
-        'status_ayah' : [status_ayah],
-        'pekerjaan_ibu': [pekerjaan_ibu],
-        'penghasilan_ibu': [penghasilan_ibu],
-        'status_ibu' : [status_ibu],
-        'jumlah_tanggungan': [jumlah_tanggungan],
-        'kepemilikan_rumah': [kepemilikan_rumah],
-        'sumber_air' : [sumber_air],
-        'kendaraan_roda_4' : [kendaraan_roda_4],
-        'kendaraan_roda_2' : [kendaraan_roda_2],
-        'biaya_listrik' : [biaya_listrik],
-        'watt_listrik' :[watt_listrik],
-        'kondisi_rumah' : [kondisi_rumah]
-    }
+    if request.form['excel'] == 'True':
+        data = request.files['file']
+        data = pd.read_excel(data)
 
-    df_new = pd.DataFrame(new_data1)
-    # Prediksi kelas menggunakan model yang telah dilatih
-    predicted_class = rf_classifier.predict(df_new)
+        data['pekerjaan_ayah'] = data['Pekerjaan Ayah'].replace(mappingPekerjaanAyah)
+        data['penghasilan_ayah'] = data['Penghasilan Ayah'].replace(mappingPenghasilanAyah)
+        data['status_ayah'] = data['Status Ayah'].replace(mappingStatusAyah)
+        data['pekerjaan_ibu'] = data['Pekerjaan Ibu'].replace(mappingPekerjaanIbu)
+        data['penghasilan_ibu'] = data['Penghasilan Ibu'].replace(mappingPenghasilanIbu)
+        data['status_ibu'] = data['Status Ibu'].replace(mappingStatusIbu)
+        data['jumlah_tanggungan'] = data['Jumlah Tanggungan'].apply(extract_number)
+        data['kepemilikan_rumah'] = data['Kepemilikan Rumah'].replace(mappingKepemilikanRumah)
+        data['sumber_air'] = data['Sumber Air'].replace(mappingSumberAir)
+        data['kendaraan_roda_4'] = data['Kendaraan Roda 4']
+        data['kendaraan_roda_2'] = data['Kendaraan Roda 2']
+        data['biaya_listrik'] = data['Biaya Listrik Bulanan'].replace(mappingBiayaListrikBulanan)
+        data['watt_listrik'] = data['Watt Listrik']
+        data['kondisi_rumah'] = data['Kondisi Rumah'].replace(mappingKondisiRumah)
 
-    # Cetak hasil prediksi
-    print(predicted_class[0])
+        data = data.drop(['Pekerjaan Ayah', 'Penghasilan Ayah', 'Status Ayah', 'Pekerjaan Ibu', 'Penghasilan Ibu', 'Status Ibu', 'Jumlah Tanggungan', 'Kepemilikan Rumah', 'Sumber Air', 'Kendaraan Roda 4', 'Kendaraan Roda 2', 'Biaya Listrik Bulanan', 'Watt Listrik', 'Kondisi Rumah'], axis=1)
+        test = data.drop(['Jurusan', 'Nama Siswa', 'Prodi'], axis=1)
+        test = pd.DataFrame(test)
+        data = pd.DataFrame(data)
 
-    return "okay"
+        # Prediksi kelas menggunakan model yang telah dilatih
+        predicted_class = rf_classifier.predict(test)
+
+        # Dictionary b dengan harga berdasarkan prodi dan ukt
+        b = {
+            'Teknik Informatika': {0: 200000, 1: 300000, 2: 400000, 3: 500000, 4: 600000, 5: 700000, 6: 800000, 7: 900000},
+            'Sistem Informasi': {0: 150000, 1: 200000, 2: 300000, 3: 400000, 4: 500000, 5: 600000, 6: 700000, 7: 800000}
+        }
+
+        data['Ukt'] = predicted_class
+
+        # Fungsi untuk mendapatkan harga berdasarkan prodi dan ukt
+        def get_harga(row, data_b):
+            prodi = row['Prodi']
+            ukt_level = row['Ukt']
+            return data_b.get(prodi, {}).get(ukt_level, None)
+
+        # Terapkan fungsi ke DataFrame untuk membuat kolom 'harga'
+        data['harga'] = data.apply(get_harga, axis=1, data_b=b)
+        data = pd.DataFrame(data)
+        print(data)
+
+        cur = mysql.connection.cursor()
+        # Iterasi melalui setiap baris DataFrame dan menyimpan data ke database
+        for index, row in data.iterrows():
+            # Menjalankan kueri untuk menyimpan data
+            cur.execute("INSERT INTO datatesting (nama, jurusan, prodi, pekerjaan_ayah, penghasilan_ayah, status_ayah, pekerjaan_ibu, penghasilan_ibu, status_ibu, jumlah_tanggungan_keluarga, kepemilikan_rumah, sumber_air, kendaraanroda_4, kendaraanroda_2, biaya_listrik, watt_listrik, kondisi_rumah, ukt, harga) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", 
+                        (
+                            row['Nama Siswa'],
+                            row['Jurusan'],
+                            row['Prodi'], 
+                            row['pekerjaan_ayah'], 
+                            row['penghasilan_ayah'], 
+                            row['status_ayah'], 
+                            row['pekerjaan_ibu'],
+                            row['penghasilan_ibu'],
+                            row['status_ibu'],
+                            row['jumlah_tanggungan'],
+                            row['kepemilikan_rumah'],
+                            row['sumber_air'],
+                            row['kendaraan_roda_4'],
+                            row['kendaraan_roda_2'],
+                            row['biaya_listrik'],
+                            row['watt_listrik'],
+                            row['kondisi_rumah'],
+                            row['Ukt'],
+                            row['harga']
+                            ))
+        mysql.connection.commit()
+        cur.close()
+
+    else:
+        nama = request.form['nama']
+        jurusan = request.form['jurusan']
+        prodi = request.form['prodi']
+        pekerjaan_ayah = int(request.form['pekerjaan_ayah'])
+        penghasilan_ayah = int(request.form['penghasilan_ayah'])
+        status_ayah = int(request.form['status_ayah'])
+        pekerjaan_ibu = int(request.form['pekerjaan_ibu'])
+        penghasilan_ibu = int(request.form['penghasilan_ibu'])
+        status_ibu = int(request.form['status_ibu'])
+        jumlah_tanggungan = int(request.form['jumlah_tanggungan'])
+        kepemilikan_rumah = int(request.form['kepemilikan_rumah'])
+        sumber_air = int(request.form['sumber_air'])
+        kendaraan_roda_4 = int(request.form['kendaraan_roda_4'])
+        kendaraan_roda_2 = int(request.form['kendaraan_roda_2'])
+        biaya_listrik = int(request.form['biaya_listrik'])
+        watt_listrik = int(request.form['watt_listrik'])
+        kondisi_rumah = int(request.form['kondisi_rumah'])
+
+        new_data1 = {
+            'nama': [nama],
+            'jurusan': [jurusan],
+            'prodi': [prodi],
+            'pekerjaan_ayah': [pekerjaan_ayah],
+            'penghasilan_ayah': [penghasilan_ayah],
+            'status_ayah' : [status_ayah],
+            'pekerjaan_ibu': [pekerjaan_ibu],
+            'penghasilan_ibu': [penghasilan_ibu],
+            'status_ibu' : [status_ibu],
+            'jumlah_tanggungan': [jumlah_tanggungan],
+            'kepemilikan_rumah': [kepemilikan_rumah],
+            'sumber_air' : [sumber_air],
+            'kendaraan_roda_4' : [kendaraan_roda_4],
+            'kendaraan_roda_2' : [kendaraan_roda_2],
+            'biaya_listrik' : [biaya_listrik],
+            'watt_listrik' :[watt_listrik],
+            'kondisi_rumah' : [kondisi_rumah]
+        }
+
+        df_new = pd.DataFrame(new_data1)
+        df = df_new.drop(['nama', 'prodi', 'jurusan'], axis=1)
+        # Prediksi kelas menggunakan model yang telah dilatih
+        predicted_class = rf_classifier.predict(df)
+
+        df_new['ukt'] = predicted_class
+
+        # Dictionary b dengan harga berdasarkan prodi dan ukt
+        b = {
+            'Teknik Informatika': {0: 200000, 1: 300000, 2: 400000, 3: 500000, 4: 600000, 5: 700000, 6: 800000, 7: 900000},
+            'Sistem Informasi': {0: 150000, 1: 200000, 2: 300000, 3: 400000, 4: 500000, 5: 600000, 6: 700000, 7: 800000}
+        }
+
+        # Fungsi untuk mendapatkan harga berdasarkan prodi dan ukt
+        def get_harga(row, data_b):
+            prodi = row['prodi']
+            ukt_level = row['ukt']
+            return data_b.get(prodi, {}).get(ukt_level, None)
+
+        # Terapkan fungsi ke DataFrame untuk membuat kolom 'harga'
+        df_new['harga'] = df_new.apply(get_harga, axis=1, data_b=b)
+
+        cur = mysql.connection.cursor()
+        cur.execute ("INSERT into datatesting (nama, jurusan, prodi, pekerjaan_ayah, penghasilan_ayah, status_ayah, pekerjaan_ibu, penghasilan_ibu, status_ibu, jumlah_tanggungan_keluarga, kepemilikan_rumah, sumber_air, kendaraanroda_4, kendaraanroda_2, biaya_listrik, watt_listrik, kondisi_rumah, ukt, harga) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", ( 
+            df_new['nama'][0], 
+            df_new['jurusan'][0], 
+            df_new['prodi'][0], 
+            df_new['pekerjaan_ayah'][0], 
+            df_new['penghasilan_ayah'][0], 
+            df_new['status_ayah'][0], 
+            df_new['pekerjaan_ibu'][0],
+            df_new['penghasilan_ibu'][0],
+            df_new['status_ibu'][0],
+            df_new['jumlah_tanggungan'][0],
+            df_new['kepemilikan_rumah'][0],
+            df_new['sumber_air'][0],
+            df_new['kendaraan_roda_4'][0],
+            df_new['kendaraan_roda_2'][0],
+            df_new['biaya_listrik'][0],
+            df_new['watt_listrik'][0],
+            df_new['kondisi_rumah'][0],
+            df_new['ukt'][0],
+            df_new['harga'][0]
+            ))
+        mysql.connection.commit()
+    flash("Data Testing Berhasil")
+    return redirect(url_for('datatesting'))
+
+@app.route('/deletedatatesting/<string:id_data>', methods = ['POST','DELETE'])
+def delatedatatesting(id_data):
+    if (request.form['_method'] == 'DELETE'):
+        flash("Delete Data Berhasil")
+        cur = mysql.connection.cursor()
+        cur.execute("DELETE FROM datatesting WHERE id_datatesting = %s", (id_data,))
+        mysql.connection.commit()
+        cur.close()
+        return redirect (url_for('datatesting'))
 
 @app.route ('/dataklasifikasi')
 def dataklasifikasi ():
     if 'nama' in session:
-        return render_template('dataklasifikasi.html', nama=session['nama'])
+        cur = mysql.connection.cursor()
+        cur.execute ("SELECT * From datatesting")
+        data =cur.fetchall()
+        cur.close()
+        return render_template('dataklasifikasi.html', nama=session['nama'], tbl_datatesting = data)
     else:
         return render_template('login.html')
 

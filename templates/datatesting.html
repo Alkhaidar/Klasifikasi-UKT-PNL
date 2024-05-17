@@ -14,7 +14,7 @@
 <!-- Button untuk menampilkan modal form tambah -->
 <button id="tambahButton" type="button" class="btn btn-primary mb-2" data-bs-toggle="modal"
   data-bs-target="#tambahModal">
-  <span class="badge bg-primary"><i class="bi bi-plus"></i>Data Testing</span>
+  <span class="badge bg-primary"><i class="bi bi-plus"></i>Upload Excel</span>
 </button>
 
 <!-- Modal form tambah -->
@@ -27,15 +27,16 @@
       </div>
       <div class="modal-body">
         <!-- Isi formulir tambah di sini -->
-        <form>
+        <form method="POST" action="/datatesting" enctype="multipart/form-data">
           <div class="row mb-3">
             <div class="col-sm-12">
               <div class="input-group">
-                <input class="form-control" type="file" id="formFile" accept=".csv">
+                <input type="hidden" name="excel" value="True">
+                <input type="file" name="file" class="form-control">
               </div>
             </div>
             <div class="col-sm-12 text-secondary">
-              <i class="bi bi-info-circle-fill text-info me-1"></i> File harus memiliki ekstensi .csv
+              <i class="bi bi-info-circle-fill text-info me-1"></i> File harus memiliki ekstensi .xlxx
             </div>
           </div>
           <div class="row mb-2 justify-content-end">
@@ -55,67 +56,330 @@
 </div>
 </div>
 
+<!-- Button untuk menampilkan modal form tambah -->
+<button id="tambahButtondata" type="button" class="btn btn-primary mb-2" data-bs-toggle="modal"
+  data-bs-target="#tambahmodalform">
+  <span class="badge bg-primary"><i class="bi bi-plus"></i>Upload Form</span>
+</button>
+
+<!-- Modal Form Tambah -->
+<div class="modal fade" id="tambahmodalform" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Tambah Data</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <!-- Form -->
+        <form method="POST" action="/datatesting" enctype="multipart/form-data">
+          <input type="hidden" name="excel" value="False">
+          <div class="mb-3">
+            <label for="nama" class="form-label">Nama</label>
+            <input type="text" class="form-control" id="nama" placeholder="Masukkan nama" name="nama">
+          </div>
+          <div class="mb-3">
+            <label for="jurusan" class="form-label">Jurusan</label>
+            <select class="form-select" id="jurusan" name="jurusan">
+              <option value="Teknologi Informasi Dan Komputer">Teknologi Informasi Dan Komputer</option>
+              
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="prodi" class="form-label">Prodi</label>
+            <select class="form-select" id="prodi" name="prodi">
+              <option value="Teknik Informatika">Teknik Informatika</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="pekerjaan_ayah" class="form-label">Pekejaan Ayah</label>
+            <select class="form-select" id="pekerjaan_ayah" name="pekerjaan_ayah">
+              <option value="0">TIDAK BEKERJA</option>
+              <option value="2">Petani</option>
+              <option value="3">Nelayan</option>
+              <option value="4">PNS</option>
+              <option value="5">Wirausaha</option>
+              <option value="6">Peg. Swasta</option>
+              <option value="7">TNI / POLRI</option>
+              <option value="1">Lainnya</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="penghasilan_ayah" class="form-label">Penghasilan Ayah</label>
+            <select class="form-select" id="penghasilan_ayah" name="penghasilan_ayah">
+              <option value="0">Tidak Berpenghasilan</option>
+              <option value="1"> < Rp. 250.000</option>
+              <option value="2">Rp. 250.001 - Rp. 500.000</option>
+              <option value="3">Rp. 500.001 - Rp. 750.000</option>
+              <option value="4">Rp. 750.001 - Rp. 1.000.000</option>
+              <option value="5">Rp. 1.000.001 - Rp. 1.250.000</option>
+              <option value="6">Rp. 1.250.001 - Rp. 1.500.000</option>
+              <option value="7">Rp. 1.500.001 - Rp. 1.750.000</option>
+              <option value="8">Rp. 1.750.001 - Rp. 2.000.000</option>
+              <option value="9">Rp. 2.000.001 - Rp. 2.250.000</option>
+              <option value="10">Rp. 2.250.001 - Rp. 2.500.000</option>
+              <option value="11">Rp. 2.500.001 - Rp. 2.750.000</option>
+              <option value="12">Rp. 2.750.001 - Rp. 3.000.000</option>
+              <option value="13">Rp. 3.000.001 - Rp. 3.250.000</option>
+              <option value="14">Rp. 3.250.001 - Rp. 3.500.000</option>
+              <option value="15">Rp. 3.500.001 - Rp. 3.750.000</option>
+              <option value="16">Rp. 3.750.001 - Rp. 4.000.000</option>
+              <option value="17">Rp. 4.000.001 - Rp. 4.250.000</option>
+              <option value="18">Rp. 4.250.001 - Rp. 4.500.000</option>
+              <option value="19">Rp. 4.500.001 - Rp. 4.750.000</option>
+              <option value="20">Rp. 4.750.001 - Rp. 5.000.000</option>
+              <option value="21">Rp. 5.000.001 - Rp. 5.250.000</option>
+              <option value="22">Rp. 5.250.001 - Rp. 5.500.000</option>
+              <option value="23">Rp. 5.500.001 - Rp. 5.750.000</option>
+              
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="status_ayah" class="form-label">Status Ayah</label>
+            <select class="form-select" id="status_ayah" name="status_ayah">
+              <option value="1">Wafat</option>
+              <option value="2">Hidup</option>
+              <option value="3">Becerai</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="pekerjaan_ibu" class="form-label">Pekerjaan Ibu</label>
+            <select class="form-select" id="pekerjaan_ibu" name="pekerjaan_ibu">
+              <option value="0">Tidak Bekerja</option>
+              <option value="1">Lainnya</option>
+              <option value="2">Petani</option>
+              <option value="3">Wirausaha</option>
+              <option value="4">Pegawai Swasta</option>
+              <option value="5">PNS</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="penghasilan_ibu" class="form-label">Penghasilan Ibu</label>
+            <select class="form-select" id="penghasilan_ibu" name="penghasilan_ibu">
+              <option value="0">Tidak Berpenghasilan</option>
+              <option value="1"> < Rp. 250.000</option>
+              <option value="2">Rp. 250.001 - Rp. 500.000</option>
+              <option value="3">Rp. 500.001 - Rp. 750.000</option>
+              <option value="4">Rp. 750.001 - Rp. 1.000.000</option>
+              <option value="5">Rp. 1.000.001 - Rp. 1.250.000</option>
+              <option value="6">Rp. 1.250.001 - Rp. 1.500.000</option>
+              <option value="7">Rp. 1.500.001 - Rp. 1.750.000</option>
+              <option value="8">Rp. 1.750.001 - Rp. 2.000.000</option>
+              <option value="9">Rp. 2.000.001 - Rp. 2.250.000</option>
+              <option value="10">Rp. 2.250.001 - Rp. 2.500.000</option>
+              <option value="11">Rp. 2.500.001 - Rp. 2.750.000</option>
+              <option value="12">Rp. 2.750.001 - Rp. 3.000.000</option>
+              <option value="13">Rp. 3.000.001 - Rp. 3.250.000</option>
+              <option value="14">Rp. 3.250.001 - Rp. 3.500.000</option>
+              <option value="15">Rp. 3.500.001 - Rp. 3.750.000</option>
+              <option value="16">Rp. 3.750.001 - Rp. 4.000.000</option>
+              <option value="17">Rp. 4.000.001 - Rp. 4.250.000</option>
+              <option value="18">Rp. 4.250.001 - Rp. 4.500.000</option>
+              <option value="19">Rp. 4.500.001 - Rp. 4.750.000</option>
+              <option value="20">Rp. 4.750.001 - Rp. 5.000.000</option>
+              <option value="21">Rp. 5.000.001 - Rp. 5.250.000</option>
+              <option value="22">Rp. 5.250.001 - Rp. 5.500.000</option>              
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="status_ibu" class="form-label">Status Ibu</label>
+            <select class="form-select" id="status_ibu" name="status_ibu">
+              <option value="1">Wafat</option>
+              <option value="2">Hidup</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="jumlah_tanggungan" class="form-label">Jumlah Tanggungan</label>
+            <select class="form-select" id="jumlah_tanggungan" name="jumlah_tanggungan">
+              <option value="1">1 Orang</option>
+              <option value="2">2 Orang</option>
+              <option value="3">3 Orang</option>
+              <option value="4">4 Orang</option>
+              <option value="5">5 Orang</option>
+              <option value="6">6 Orang</option>
+              <option value="7">7 Orang</option>
+              <option value="8">8 Orang</option>
+              <option value="9">9 Orang</option>
+              <option value="10">10 Orang</option>
+            </select>
+          </div>
+          <div class="mb-3">  
+            <label for="kepemilikan_rumah" class="form-label">Kepemilikan Rumah</label>
+            <select class="form-select" id="kepemilikan_rumah" name="kepemilikan_rumah">
+              <option value="0">Tidak Memiliki</option>
+              <option value="1">Menumpang Tanpa Izin</option>
+              <option value="2">Menumpang</option>
+              <option value="3">Sewa Bulanan</option>
+              <option value="4">Sewa Tahunan</option>
+              <option value="5">Sendiri</option>
+          
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="sumber_air" class="form-label">Sumber Air</label>
+            <select class="form-select" id="sumber_air" name="sumber_air">
+              <option value="1">Sumur</option>
+              <option value="2">Sungai/Mata Air</option>
+              <option value="3">PDAM</option>
+              <option value="4">Kemasan</option>                        
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="kendaraan_roda_4" class="form-label">Kendaraan Roda 4</label>
+            <select class="form-select" id="kendaraan_roda_4" name="kendaraan_roda_4">
+              <option value="0">0</option>
+              <option value="1">1</option>                   
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="kendaraan_roda_2" class="form-label">Kendaraan Roda 2</label>
+            <select class="form-select" id="kendaraan_roda_2" name="kendaraan_roda_2">
+              <option value="0">0</option>
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="biaya_listrik" class="form-label">Biaya Listrik</label>
+            <select class="form-select" id="biaya_listrik" name="biaya_listrik">
+              <option value="1">Rp 50,000</option>
+              <option value="2">Rp 100,000</option>
+              <option value="3">Rp 150,000</option>
+              <option value="4">Rp 200,000</option>
+              <option value="5">Rp 250,000</option>
+              <option value="6">Rp 300,000</option>              
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="watt_listrik" class="form-label">Ampere Listrik</label>
+            <select class="form-select" id="watt_listrik" name="watt_listrik">
+              <option value="1">1 Ampere</option>
+              <option value="2">2 Ampere</option>
+              <option value="3">3 Ampere</option>
+              <option value="4">4 Ampere</option>
+              <option value="5">5 Ampere</option>
+              <option value="6">6 Ampere</option>
+              <option value="7">7 Ampere</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="kondisi_rumah" class="form-label">Kondisi Rumah</label>
+            <select class="form-select" id="kondisi_rumah" name="kondisi_rumah">
+              <option value="1">Buruk</option>
+              <option value="2">Sedang</option>
+              <option value="3">Baik</option>
+            </select>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+            <button type="submit" class="btn btn-primary">Klasifikasi</button>
+          </div>
+        </form>
+        <!-- End Form -->
+      </div>
+      
+    </div>
+  </div>
+</div>
+
+
+
 <section class="section">
+  {% with messages = get_flashed_messages() %}
+  {% if messages %}
+  {% for message in messages %}
+  <div class="alert alert-success alert-dismissible fade show mb-2" role="alert">
+      {{ message }}
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+  {% endfor %}
+  {% endif %}
+  {% endwith %}
+
   <div class="col-lg-12">
     <div class="card">
       <div class="card-body">
-        <h5 class="card-title">Data Training</h5>
+        <h5 class="card-title">Data Testing</h5>
         <!-- Table with stripped rows -->
 
         <table id="myTable" class="table responsive nowrap table-bordered table-striped align-middle"
           style="width:100%">
           <thead>
             <tr>
-              <th>
-                <b>N</b>ama Mahasiswa
-              </th>
-              <th>Jurusan</th>
-              <th>Prodi</th>
+              <th>No</th>
+              <th>Nama Mahasiswa</th>
               <th>Pekerjaan Ayah</th>
-              <th>Pekejaan Ibu</th>
               <th>Penghasilan Ayah</th>
-              <th>Penghasilan Ibu</th>
               <th>Status Ayah</th>
+              <th>Pekejaan Ibu</th>
+              <th>Penghasilan Ibu</th>
               <th>Status Ibu</th>
+              <th>Jumlah Tanggungan</th>
+              <th>Kepemilikan Rumah</th>
+              <th>Sumber Air</th>
               <th>Jumlah Kendaraan Roda Empat </th>
               <th>Jumlah Kendaraan Roda Dua</th>
-              <th>Jumlah Tanggungan</th>
               <th>Biaya Listrik Bulanan</th>
               <th>Watt Listrik</th>
-              <th>Sumber Air</th>
               <th>Kondisi Rumah</th>
-              <th>Kepemilikan Rumah</th>
-              <th>UKT</th>
               <th>Action</th>
             </tr>
           </thead>
           <tbody>
+            {% for row in tbl_datatesting %}
             <tr>
-              <td>Al Khaidar</td>
-              <td>TIK</td>
-              <td>Teknik Informatika</td>
-              <td>Pensiunan</td>
-              <td>IRT</td>
-              <td>1 Juta</td>
-              <td>0</td>
-              <td>0</td>
-              <td>1</td>
-              <td>4</td>
-              <td>Meninggal</td>
-              <td>Hidup</td>
-              <td>100 rb</td>
-              <td>300 watt</td>
-              <td>PAM</td>
-              <td>Baik</td>
-              <td>Pribadi</td>
-              <td>Kelompok 2</td>
-              <td><button type="button" class="btn btn-warning me-1">
-                  <i class="bi bi-pencil"></i>
+              <td>{{loop.index}}</td>
+              <td>{{row.1}}</td>
+              <td>{{ convertPA(row.4) }}</td>
+              <td>{{ convertPA1(row.5) }}</td>
+              <td>{{ convertSA(row.6) }}</td>
+              <td>{{ convertPI(row.7) }}</td>
+              <td>{{ convertPI1(row.8) }}</td>
+              <td>{{ convertSI(row.9) }}</td>
+              <td>{{row.10}} Orang</td>
+              <td>{{ convertKR(row.11) }}</td>
+              <td>{{ convertSA1(row.12) }}</td>
+              <td>{{row.13}}</td>
+              <td>{{row.14}}</td>
+              <td>{{ convertBLB(row.15) }}</td>
+              <td>{{row.16}} Ampere</td>
+              <td>{{ convertKR1(row.17) }}</td>
+              <td>
+                <button class="btn btn-danger" data-bs-toggle="modal"
+                data-bs-target="#modalHapus{{ loop.index }}">
+                 <i class="bi bi-trash"></i>
                 </button>
-                <button type="button" class="btn btn-danger">
-                  <i class="bi bi-trash"></i>
               </td>
             </tr>
+             <!-- modal hapus -->
+             <div class="modal fade" id="modalHapus{{ loop.index }}" tabindex="-1"
+             aria-labelledby="exampleModalLabel" aria-hidden="true">
+             <div class="modal-dialog">
+                 <div class="modal-content">
+                     <div class="modal-header">
+                         <h5 class="modal-title" id="exampleModalLabel">Delete Data Testing</h5>
+                         <button type="button" class="btn-close" data-bs-dismiss="modal"
+                             aria-label="Close"></button>
+                     </div>
+                     <form action="/deletedatatesting/{{ row.0 }}" method="POST">
+                         <div class="modal-body">
+                             <div class="row">
+                                 <input type="hidden" name="_method" value="DELETE">
+                                 <p class="fs-6">Apakah Anda Yakin Menghapus Hasil Klasifikasi <b>{{row.1}}</b>?</p>
+                             </div>
+                         </div>
+                         <div class="modal-footer">
+                             <button type="button" class="btn btn-secondary"
+                                 data-bs-dismiss="modal">Cancel</button>
+                             <button type="submit" class="btn btn-outline-danger">Delete</button>
+                         </div>
+                     </form>
+                 </div>
+             </div>
+         </div>
+         <!-- end modal hapus -->
+            {% endfor %}
           </tbody>
         </table>
         <!-- End Table with stripped rows -->
