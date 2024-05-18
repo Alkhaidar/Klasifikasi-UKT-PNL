@@ -32,7 +32,7 @@
             <div class="col-sm-12">
               <div class="input-group">
                 <input type="hidden" name="excel" value="True">
-                <input type="file" name="file" class="form-control">
+                <input type="file" name="file" class="form-control" required>
               </div>
             </div>
             <div class="col-sm-12 text-secondary">
@@ -59,7 +59,7 @@
 <!-- Button untuk menampilkan modal form tambah -->
 <button id="tambahButtondata" type="button" class="btn btn-primary mb-2" data-bs-toggle="modal"
   data-bs-target="#tambahmodalform">
-  <span class="badge bg-primary"><i class="bi bi-plus"></i>Upload Form</span>
+  <span class="badge bg-primary"><i class="bi bi-plus"></i>Input Data</span>
 </button>
 
 <!-- Modal Form Tambah -->
@@ -76,19 +76,44 @@
           <input type="hidden" name="excel" value="False">
           <div class="mb-3">
             <label for="nama" class="form-label">Nama</label>
-            <input type="text" class="form-control" id="nama" placeholder="Masukkan nama" name="nama">
+            <input required type="text" class="form-control" id="nama" placeholder="Masukkan nama" name="nama">
           </div>
           <div class="mb-3">
             <label for="jurusan" class="form-label">Jurusan</label>
             <select class="form-select" id="jurusan" name="jurusan">
+              <option value="Teknik Sipil">Teknik Sipil</option>
+              <option value="Teknik Mesin">Teknik Mesin</option>
+              <option value="Teknik Kimia">Teknik Kimia</option>
+              <option value="Teknik Elektro">Teknik Elektro</option>
+              <option value="Tata Niaga">Tata Niaga</option>
               <option value="Teknologi Informasi Dan Komputer">Teknologi Informasi Dan Komputer</option>
-              
             </select>
           </div>
           <div class="mb-3">
             <label for="prodi" class="form-label">Prodi</label>
             <select class="form-select" id="prodi" name="prodi">
+              <option value="Administrasi Bisnis">Administrasi Bisnis</option>
+              <option value="Akuntansi">Akuntansi</option>
+              <option value="Perbankan dan Keuangan">Perbankan dan Keuangan</option>
+              <option value="Teknologi Elektronika">Teknologi Elektronika</option>
+              <option value="Teknologi Industri">Teknologi Industri</option>
+              <option value="Teknologi Kimia">Teknologi Kimia</option>
+              <option value="Teknologi Kontruksi Bangunan Air">Teknologi Kontruksi Bangunan Air</option>
+              <option value="Teknologi Kontruksi Bangunan Gedung">Teknologi Kontruksi Bangunan Gedung</option>
+              <option value="Teknologi Kontruksi Jalan dan Jembatan">Teknologi Kontruksi Jalan dan Jembatan</option>
+              <option value="Teknologi Listrik">Teknologi Listrik</option>
+              <option value="Teknologi Mesin">Teknologi Mesin</option>
+              <option value="Teknologi Pengelohan Minyak dan Gas">Teknologi Pengelohan Minyak dan Gas</option>
+              <option value="Teknologi Telekomunikasi">Teknologi Telekomunikasi</option>
+              <option value="Akuntansi Lembaga Keuangan Syariah">Akuntansi Lembaga Keuangan Syariah</option>
               <option value="Teknik Informatika">Teknik Informatika</option>
+              <option value="Teknologi Rekayasa Instrumentasi dan Kontrol">Teknologi Rekayasa Instrumentasi dan Kontrol</option>
+              <option value="Teknologi Rekayasa Jaringan Telekomunikasi">Teknologi Rekayasa Jaringan Telekomunikasi</option>
+              <option value="Teknologi Rekayasa Kimia Industri">Teknologi Rekayasa Kimia Industri</option>
+              <option value="Teknologi Rekayasa Komputer Jaringan">Teknologi Rekayasa Komputer Jaringan</option>
+              <option value="Teknologi Rekayasa Konstruksi Jalan dan Jembatan">Teknologi Rekayasa Konstruksi Jalan dan Jembatan</option>
+              <option value="Teknologi Rekayasa Manufaktur">Teknologi Rekayasa Manufaktur</option>
+              <option value="Teknologi Rekayasa Pembangkit Energi">Teknologi Rekayasa Pembangkit Energi</option>
             </select>
           </div>
           <div class="mb-3">
@@ -282,8 +307,6 @@
     </div>
   </div>
 </div>
-
-
 
 <section class="section">
   {% with messages = get_flashed_messages() %}
