@@ -311,15 +311,21 @@
 <section class="section">
   {% with messages = get_flashed_messages() %}
   {% if messages %}
-  {% for message in messages %}
-  <div class="alert alert-success alert-dismissible fade show mb-2" role="alert">
-      {{ message }}
-      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-  </div>
-  {% endfor %}
+    {% for message in messages %}
+      {% if message.startswith('ERROR:') %}
+      <div class="alert alert-danger alert-dismissible fade show mb-2" role="alert">
+      {% else %}
+      <div class="alert alert-success alert-dismissible fade show mb-2" role="alert">
+      {% endif %}
+          {{ message }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    {% endfor %}
   {% endif %}
-  {% endwith %}
+{% endwith %}
 
+
+  
   <div class="col-lg-12">
     <div class="card">
       <div class="card-body">

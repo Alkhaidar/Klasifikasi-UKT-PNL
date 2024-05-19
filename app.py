@@ -433,7 +433,8 @@ def postdatatraining ():
             flash("Data Training Berhasil DiUpload")
             return redirect(url_for('datatraining'))
         except Exception as e:
-            return str(e)
+            flash("ERROR: Terjadi Kesalahan Saat Menambah Data Training")
+            return redirect(url_for('datatesting'))
    
 @app.route('/deletedatatraining/<string:id_data>', methods = ['POST','DELETE'])
 def deletedatatraining(id_data):
@@ -458,220 +459,224 @@ def datatesting():
     
 @app.route ('/datatesting', methods = ['POST'])
 def postdatatesting():
-    cur = mysql.connection.cursor()
-    cur.execute("SELECT pekerjaan_ayah, penghasilan_ayah, status_ayah, pekerjaan_ibu, penghasilan_ibu, status_ibu, jumlah_tanggungan_keluarga, kepemilikan_rumah, sumber_air, kendaraanroda_4, kendaraanroda_2, biaya_listrik, watt_listrik, kondisi_rumah, ukt FROM datatraining")
-    data = cur.fetchall()
-    cur.close()
-
-    # Konversi tuple menjadi dictionary dengan menggunakan nama kolom sebagai kunci
-    dictionary = {
-        'pekerjaan_ayah': [subtuple[0] for subtuple in data],
-        'penghasilan_ayah': [subtuple[1] for subtuple in data],
-        'status_ayah': [subtuple[2] for subtuple in data],
-        'pekerjaan_ibu': [subtuple[3] for subtuple in data],
-        'penghasilan_ibu': [subtuple[4] for subtuple in data],
-        'status_ibu': [subtuple[5] for subtuple in data],
-        'jumlah_tanggungan': [subtuple[6] for subtuple in data],
-        'kepemilikan_rumah': [subtuple[7] for subtuple in data],
-        'sumber_air': [subtuple[8] for subtuple in data],
-        'kendaraan_roda_4': [subtuple[9] for subtuple in data],
-        'kendaraan_roda_2': [subtuple[10] for subtuple in data],
-        'biaya_listrik': [subtuple[11] for subtuple in data],
-        'watt_listrik': [subtuple[12] for subtuple in data],
-        'kondisi_rumah': [subtuple[13] for subtuple in data],
-        'kluster': [subtuple[14] for subtuple in data]
-        }
-    
-    new_data = pd.DataFrame(dictionary)
-    X = new_data.drop('kluster', axis=1)
-    y = new_data['kluster']
-
-    # Membagi data menjadi data latih dan data uji dengan shuffle=False
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=None, shuffle=False, random_state=42)
-
-    # Inisialisasi dan melatih model Random Forest
-    rf_classifier = RandomForestClassifier(n_estimators=100, random_state=42)
-    rf_classifier.fit(X_train, y_train)
-
-    if request.form['excel'] == 'True':
-        data = request.files['file']
-        data = pd.read_excel(data)
-
-        data['pekerjaan_ayah'] = data['Pekerjaan Ayah'].replace(mappingPekerjaanAyah)
-        data['penghasilan_ayah'] = data['Penghasilan Ayah'].replace(mappingPenghasilanAyah)
-        data['status_ayah'] = data['Status Ayah'].replace(mappingStatusAyah)
-        data['pekerjaan_ibu'] = data['Pekerjaan Ibu'].replace(mappingPekerjaanIbu)
-        data['penghasilan_ibu'] = data['Penghasilan Ibu'].replace(mappingPenghasilanIbu)
-        data['status_ibu'] = data['Status Ibu'].replace(mappingStatusIbu)
-        data['jumlah_tanggungan'] = data['Jumlah Tanggungan'].apply(extract_number)
-        data['kepemilikan_rumah'] = data['Kepemilikan Rumah'].replace(mappingKepemilikanRumah)
-        data['sumber_air'] = data['Sumber Air'].replace(mappingSumberAir)
-        data['kendaraan_roda_4'] = data['Kendaraan Roda 4']
-        data['kendaraan_roda_2'] = data['Kendaraan Roda 2']
-        data['biaya_listrik'] = data['Biaya Listrik Bulanan'].replace(mappingBiayaListrikBulanan)
-        data['watt_listrik'] = data['Watt Listrik']
-        data['kondisi_rumah'] = data['Kondisi Rumah'].replace(mappingKondisiRumah)
-
-        data = data.drop(['Pekerjaan Ayah', 'Penghasilan Ayah', 'Status Ayah', 'Pekerjaan Ibu', 'Penghasilan Ibu', 'Status Ibu', 'Jumlah Tanggungan', 'Kepemilikan Rumah', 'Sumber Air', 'Kendaraan Roda 4', 'Kendaraan Roda 2', 'Biaya Listrik Bulanan', 'Watt Listrik', 'Kondisi Rumah'], axis=1)
-        test = data.drop(['Jurusan', 'Nama Siswa', 'Prodi'], axis=1)
-        test = pd.DataFrame(test)
-        data = pd.DataFrame(data)
-
-        # Prediksi kelas menggunakan model yang telah dilatih
-        predicted_class = rf_classifier.predict(test)
-
-        # Dictionary b dengan harga berdasarkan prodi dan ukt
-        b = {
-        'Administrasi Bisnis': {
-        0: '500.000,00', 1: '1.000.000,00', 2: '2.000.000,00', 3: '2.500.000,00', 
-        4: '3.000.000,00', 5: '3.750.000,00', 6: '4.500.000,00', 7: '5.500.000,00'
-        },
-        'Akuntansi': {
-            0: '500.000,00', 1: '1.000.000,00', 2: '2.000.000,00', 3: '2.500.000,00', 
-            4: '3.000.000,00', 5: '3.750.000,00', 6: '4.500.000,00', 7: '5.500.000,00'
-        },
-        'Perbankan dan Keuangan': {
-            0: '500.000,00', 1: '1.000.000,00', 2: '2.500.000,00', 3: '3.000.000,00', 
-            4: '3.500.000,00', 5: '4.250.000,00', 6: '5.000.000,00', 7: '6.000.000,00'
-        },
-        'Teknologi Elektronika': {
-            0: '500.000,00', 1: '1.000.000,00', 2: '2.500.000,00', 3: '3.000.000,00', 
-            4: '3.500.000,00', 5: '4.250.000,00', 6: '5.000.000,00', 7: '6.000.000,00'
-        },
-        'Teknologi Industri': {
-            0: '500.000,00', 1: '1.000.000,00', 2: '2.500.000,00', 3: '3.000.000,00', 
-            4: '3.500.000,00', 5: '4.250.000,00', 6: '5.000.000,00', 7: '6.000.000,00'
-        },
-        'Teknologi Kimia': {
-            0: '500.000,00', 1: '1.000.000,00', 2: '2.500.000,00', 3: '3.000.000,00', 
-            4: '3.500.000,00', 5: '4.250.000,00', 6: '5.000.000,00', 7: '6.000.000,00'
-        },
-        'Teknologi Kontruksi Bangunan Air': {
-            0: '500.000,00', 1: '1.000.000,00', 2: '2.500.000,00', 3: '3.000.000,00', 
-            4: '3.500.000,00', 5: '4.250.000,00', 6: '5.000.000,00', 7: '6.000.000,00'
-        },
-        'Teknologi Kontruksi Bangunan Gedung': {
-            0: '500.000,00', 1: '1.000.000,00', 2: '2.500.000,00', 3: '3.000.000,00', 
-            4: '3.500.000,00', 5: '4.250.000,00', 6: '5.000.000,00', 7: '6.000.000,00'
-        },
-        'Teknologi Kontruksi Jalan dan Jembatan': {
-            0: '500.000,00', 1: '1.000.000,00', 2: '2.500.000,00', 3: '3.000.000,00', 
-            4: '3.500.000,00', 5: '4.250.000,00', 6: '5.000.000,00', 7: '6.000.000,00'
-        },
-        'Teknologi Listrik': {
-            0: '500.000,00', 1: '1.000.000,00', 2: '2.500.000,00', 3: '3.000.000,00', 
-            4: '3.500.000,00', 5: '4.250.000,00', 6: '5.000.000,00', 7: '6.000.000,00'
-        },
-        'Teknologi Mesin': {
-            0: '500.000,00', 1: '1.000.000,00', 2: '3.000.000,00', 3: '3.500.000,00', 
-            4: '4.250.000,00', 5: '5.000.000,00', 6: '6.000.000,00', 7: '7.000.000,00'
-        },
-        'Teknologi Pengelohan Minyak dan Gas': {
-            0: '500.000,00', 1: '1.000.000,00', 2: '2.500.000,00', 3: '3.000.000,00', 
-            4: '3.500.000,00', 5: '4.250.000,00', 6: '5.000.000,00', 7: '6.000.000,00'
-        },
-        'Teknologi Telekomunikasi': {
-            0: '500.000,00', 1: '1.000.000,00', 2: '2.500.000,00', 3: '3.000.000,00', 
-            4: '3.500.000,00', 5: '4.250.000,00', 6: '5.000.000,00', 7: '6.000.000,00'
-        },
-        'Akuntansi Lembaga Keuangan Syariah': {
-            0: '500.000,00', 1: '1.000.000,00', 2: '3.000.000,00', 3: '3.500.000,00', 
-            4: '4.250.000,00', 5: '5.000.000,00', 6: '6.000.000,00', 7: '7.000.000,00'
-        },
-        'Teknik Informatika': {
-            0: '500.000,00', 1: '1.000.000,00', 2: '3.000.000,00', 3: '3.500.000,00', 
-            4: '4.250.000,00', 5: '5.000.000,00', 6: '6.000.000,00', 7: '7.000.000,00'
-        },
-        'Teknologi Rekayasa Instrumentasi dan Kontrol': {
-            0: '500.000,00', 1: '1.000.000,00', 2: '3.000.000,00', 3: '3.500.000,00', 
-            4: '4.250.000,00', 5: '5.000.000,00', 6: '6.000.000,00', 7: '7.000.000,00'
-        },
-        'Teknologi Rekayasa Jaringan Telekomunikasi': {
-            0: '500.000,00', 1: '1.000.000,00', 2: '3.000.000,00', 3: '3.500.000,00', 
-            4: '4.250.000,00', 5: '5.000.000,00', 6: '6.000.000,00', 7: '7.000.000,00'
-        },
-        'Teknologi Rekayasa Kimia Industri': {
-            0: '500.000,00', 1: '1.000.000,00', 2: '3.000.000,00', 3: '3.500.000,00', 
-            4: '4.250.000,00', 5: '5.000.000,00', 6: '6.000.000,00', 7: '7.000.000,00'
-        },
-        'Teknologi Rekayasa Komputer Jaringan': {
-            0: '500.000,00', 1: '1.000.000,00', 2: '3.000.000,00', 3: '3.500.000,00', 
-            4: '4.250.000,00', 5: '5.000.000,00', 6: '6.000.000,00', 7: '7.000.000,00'
-        },
-        'Teknologi Rekayasa Konstruksi Jalan dan Jembatan': {
-            0: '500.000,00', 1: '1.000.000,00', 2: '3.000.000,00', 3: '3.500.000,00', 
-            4: '4.250.000,00', 5: '5.000.000,00', 6: '6.000.000,00', 7: '7.000.000,00'
-        },
-        'Teknologi Rekayasa Manufaktur': {
-            0: '500.000,00', 1: '1.000.000,00', 2: '3.000.000,00', 3: '3.500.000,00', 
-            4: '4.250.000,00', 5: '5.000.000,00', 6: '6.000.000,00', 7: '7.000.000,00'
-        },
-        'Teknologi Rekayasa Pembangkit': {
-            0: '500.000,00', 1: '1.000.000,00', 2: '3.000.000,00', 3: '3.500.000,00', 
-            4: '4.250.000,00', 5: '5.000.000,00', 6: '6.000.000,00', 7: '7.000.000,00'
-        }
-            }
-
-        data['Ukt'] = predicted_class
-
-        # Fungsi untuk mendapatkan harga berdasarkan prodi dan ukt
-        def get_harga(row, data_b):
-            prodi = row['Prodi']
-            ukt_level = row['Ukt']
-            return data_b.get(prodi, {}).get(ukt_level, None)
-
-        # Terapkan fungsi ke DataFrame untuk membuat kolom 'harga'
-        data['harga'] = data.apply(get_harga, axis=1, data_b=b)
-        data = pd.DataFrame(data)
-        print(data)
-
+    try:
         cur = mysql.connection.cursor()
-        # Iterasi melalui setiap baris DataFrame dan menyimpan data ke database
-        for index, row in data.iterrows():
-            # Menjalankan kueri untuk menyimpan data
-            cur.execute("INSERT INTO datatesting (nama, jurusan, prodi, pekerjaan_ayah, penghasilan_ayah, status_ayah, pekerjaan_ibu, penghasilan_ibu, status_ibu, jumlah_tanggungan_keluarga, kepemilikan_rumah, sumber_air, kendaraanroda_4, kendaraanroda_2, biaya_listrik, watt_listrik, kondisi_rumah, ukt, harga) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", 
-                        (
-                            row['Nama Siswa'],
-                            row['Jurusan'],
-                            row['Prodi'], 
-                            row['pekerjaan_ayah'], 
-                            row['penghasilan_ayah'], 
-                            row['status_ayah'], 
-                            row['pekerjaan_ibu'],
-                            row['penghasilan_ibu'],
-                            row['status_ibu'],
-                            row['jumlah_tanggungan'],
-                            row['kepemilikan_rumah'],
-                            row['sumber_air'],
-                            row['kendaraan_roda_4'],
-                            row['kendaraan_roda_2'],
-                            row['biaya_listrik'],
-                            row['watt_listrik'],
-                            row['kondisi_rumah'],
-                            row['Ukt'],
-                            row['harga']
-                            ))
-        mysql.connection.commit()
+        cur.execute("SELECT pekerjaan_ayah, penghasilan_ayah, status_ayah, pekerjaan_ibu, penghasilan_ibu, status_ibu, jumlah_tanggungan_keluarga, kepemilikan_rumah, sumber_air, kendaraanroda_4, kendaraanroda_2, biaya_listrik, watt_listrik, kondisi_rumah, ukt FROM datatraining")
+        data = cur.fetchall()
         cur.close()
 
-    else:
-        nama = request.form['nama']
-        jurusan = request.form['jurusan']
-        prodi = request.form['prodi']
-        pekerjaan_ayah = int(request.form['pekerjaan_ayah'])
-        penghasilan_ayah = int(request.form['penghasilan_ayah'])
-        status_ayah = int(request.form['status_ayah'])
-        pekerjaan_ibu = int(request.form['pekerjaan_ibu'])
-        penghasilan_ibu = int(request.form['penghasilan_ibu'])
-        status_ibu = int(request.form['status_ibu'])
-        jumlah_tanggungan = int(request.form['jumlah_tanggungan'])
-        kepemilikan_rumah = int(request.form['kepemilikan_rumah'])
-        sumber_air = int(request.form['sumber_air'])
-        kendaraan_roda_4 = int(request.form['kendaraan_roda_4'])
-        kendaraan_roda_2 = int(request.form['kendaraan_roda_2'])
-        biaya_listrik = int(request.form['biaya_listrik'])
-        watt_listrik = int(request.form['watt_listrik'])
-        kondisi_rumah = int(request.form['kondisi_rumah'])
+    # Konversi tuple menjadi dictionary dengan menggunakan nama kolom sebagai kunci
+    
+        dictionary = {
+            'pekerjaan_ayah': [subtuple[0] for subtuple in data],
+            'penghasilan_ayah': [subtuple[1] for subtuple in data],
+            'status_ayah': [subtuple[2] for subtuple in data],
+            'pekerjaan_ibu': [subtuple[3] for subtuple in data],
+            'penghasilan_ibu': [subtuple[4] for subtuple in data],
+            'status_ibu': [subtuple[5] for subtuple in data],
+            'jumlah_tanggungan': [subtuple[6] for subtuple in data],
+            'kepemilikan_rumah': [subtuple[7] for subtuple in data],
+            'sumber_air': [subtuple[8] for subtuple in data],
+            'kendaraan_roda_4': [subtuple[9] for subtuple in data],
+            'kendaraan_roda_2': [subtuple[10] for subtuple in data],
+            'biaya_listrik': [subtuple[11] for subtuple in data],
+            'watt_listrik': [subtuple[12] for subtuple in data],
+            'kondisi_rumah': [subtuple[13] for subtuple in data],
+            'kluster': [subtuple[14] for subtuple in data]
+            }
+        
+        new_data = pd.DataFrame(dictionary)
+        X = new_data.drop('kluster', axis=1)
+        y = new_data['kluster']
+
+        # Membagi data menjadi data latih dan data uji dengan shuffle=False
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=None, shuffle=False, random_state=42)
+
+        # Inisialisasi dan melatih model Random Forest
+        rf_classifier = RandomForestClassifier(n_estimators=100, random_state=42)
+        rf_classifier.fit(X_train, y_train)
+    
+
+        if request.form['excel'] == 'True':
+            
+            data = request.files['file']
+            data = pd.read_excel(data)
+
+            data['pekerjaan_ayah'] = data['Pekerjaan Ayah'].replace(mappingPekerjaanAyah)
+            data['penghasilan_ayah'] = data['Penghasilan Ayah'].replace(mappingPenghasilanAyah)
+            data['status_ayah'] = data['Status Ayah'].replace(mappingStatusAyah)
+            data['pekerjaan_ibu'] = data['Pekerjaan Ibu'].replace(mappingPekerjaanIbu)
+            data['penghasilan_ibu'] = data['Penghasilan Ibu'].replace(mappingPenghasilanIbu)
+            data['status_ibu'] = data['Status Ibu'].replace(mappingStatusIbu)
+            data['jumlah_tanggungan'] = data['Jumlah Tanggungan'].apply(extract_number)
+            data['kepemilikan_rumah'] = data['Kepemilikan Rumah'].replace(mappingKepemilikanRumah)
+            data['sumber_air'] = data['Sumber Air'].replace(mappingSumberAir)
+            data['kendaraan_roda_4'] = data['Kendaraan Roda 4']
+            data['kendaraan_roda_2'] = data['Kendaraan Roda 2']
+            data['biaya_listrik'] = data['Biaya Listrik Bulanan'].replace(mappingBiayaListrikBulanan)
+            data['watt_listrik'] = data['Watt Listrik']
+            data['kondisi_rumah'] = data['Kondisi Rumah'].replace(mappingKondisiRumah)
+
+            data = data.drop(['Pekerjaan Ayah', 'Penghasilan Ayah', 'Status Ayah', 'Pekerjaan Ibu', 'Penghasilan Ibu', 'Status Ibu', 'Jumlah Tanggungan', 'Kepemilikan Rumah', 'Sumber Air', 'Kendaraan Roda 4', 'Kendaraan Roda 2', 'Biaya Listrik Bulanan', 'Watt Listrik', 'Kondisi Rumah'], axis=1)
+            test = data.drop(['Jurusan', 'Nama Siswa', 'Prodi'], axis=1)
+            test = pd.DataFrame(test)
+            data = pd.DataFrame(data)
+
+            # Prediksi kelas menggunakan model yang telah dilatih
+            predicted_class = rf_classifier.predict(test)
+
+            # Dictionary b dengan harga berdasarkan prodi dan ukt
+            b = {
+            'Administrasi Bisnis': {
+            0: '500.000,00', 1: '1.000.000,00', 2: '2.000.000,00', 3: '2.500.000,00', 
+            4: '3.000.000,00', 5: '3.750.000,00', 6: '4.500.000,00', 7: '5.500.000,00'
+            },
+            'Akuntansi': {
+                0: '500.000,00', 1: '1.000.000,00', 2: '2.000.000,00', 3: '2.500.000,00', 
+                4: '3.000.000,00', 5: '3.750.000,00', 6: '4.500.000,00', 7: '5.500.000,00'
+            },
+            'Perbankan dan Keuangan': {
+                0: '500.000,00', 1: '1.000.000,00', 2: '2.500.000,00', 3: '3.000.000,00', 
+                4: '3.500.000,00', 5: '4.250.000,00', 6: '5.000.000,00', 7: '6.000.000,00'
+            },
+            'Teknologi Elektronika': {
+                0: '500.000,00', 1: '1.000.000,00', 2: '2.500.000,00', 3: '3.000.000,00', 
+                4: '3.500.000,00', 5: '4.250.000,00', 6: '5.000.000,00', 7: '6.000.000,00'
+            },
+            'Teknologi Industri': {
+                0: '500.000,00', 1: '1.000.000,00', 2: '2.500.000,00', 3: '3.000.000,00', 
+                4: '3.500.000,00', 5: '4.250.000,00', 6: '5.000.000,00', 7: '6.000.000,00'
+            },
+            'Teknologi Kimia': {
+                0: '500.000,00', 1: '1.000.000,00', 2: '2.500.000,00', 3: '3.000.000,00', 
+                4: '3.500.000,00', 5: '4.250.000,00', 6: '5.000.000,00', 7: '6.000.000,00'
+            },
+            'Teknologi Kontruksi Bangunan Air': {
+                0: '500.000,00', 1: '1.000.000,00', 2: '2.500.000,00', 3: '3.000.000,00', 
+                4: '3.500.000,00', 5: '4.250.000,00', 6: '5.000.000,00', 7: '6.000.000,00'
+            },
+            'Teknologi Kontruksi Bangunan Gedung': {
+                0: '500.000,00', 1: '1.000.000,00', 2: '2.500.000,00', 3: '3.000.000,00', 
+                4: '3.500.000,00', 5: '4.250.000,00', 6: '5.000.000,00', 7: '6.000.000,00'
+            },
+            'Teknologi Kontruksi Jalan dan Jembatan': {
+                0: '500.000,00', 1: '1.000.000,00', 2: '2.500.000,00', 3: '3.000.000,00', 
+                4: '3.500.000,00', 5: '4.250.000,00', 6: '5.000.000,00', 7: '6.000.000,00'
+            },
+            'Teknologi Listrik': {
+                0: '500.000,00', 1: '1.000.000,00', 2: '2.500.000,00', 3: '3.000.000,00', 
+                4: '3.500.000,00', 5: '4.250.000,00', 6: '5.000.000,00', 7: '6.000.000,00'
+            },
+            'Teknologi Mesin': {
+                0: '500.000,00', 1: '1.000.000,00', 2: '3.000.000,00', 3: '3.500.000,00', 
+                4: '4.250.000,00', 5: '5.000.000,00', 6: '6.000.000,00', 7: '7.000.000,00'
+            },
+            'Teknologi Pengelohan Minyak dan Gas': {
+                0: '500.000,00', 1: '1.000.000,00', 2: '2.500.000,00', 3: '3.000.000,00', 
+                4: '3.500.000,00', 5: '4.250.000,00', 6: '5.000.000,00', 7: '6.000.000,00'
+            },
+            'Teknologi Telekomunikasi': {
+                0: '500.000,00', 1: '1.000.000,00', 2: '2.500.000,00', 3: '3.000.000,00', 
+                4: '3.500.000,00', 5: '4.250.000,00', 6: '5.000.000,00', 7: '6.000.000,00'
+            },
+            'Akuntansi Lembaga Keuangan Syariah': {
+                0: '500.000,00', 1: '1.000.000,00', 2: '3.000.000,00', 3: '3.500.000,00', 
+                4: '4.250.000,00', 5: '5.000.000,00', 6: '6.000.000,00', 7: '7.000.000,00'
+            },
+            'Teknik Informatika': {
+                0: '500.000,00', 1: '1.000.000,00', 2: '3.000.000,00', 3: '3.500.000,00', 
+                4: '4.250.000,00', 5: '5.000.000,00', 6: '6.000.000,00', 7: '7.000.000,00'
+            },
+            'Teknologi Rekayasa Instrumentasi dan Kontrol': {
+                0: '500.000,00', 1: '1.000.000,00', 2: '3.000.000,00', 3: '3.500.000,00', 
+                4: '4.250.000,00', 5: '5.000.000,00', 6: '6.000.000,00', 7: '7.000.000,00'
+            },
+            'Teknologi Rekayasa Jaringan Telekomunikasi': {
+                0: '500.000,00', 1: '1.000.000,00', 2: '3.000.000,00', 3: '3.500.000,00', 
+                4: '4.250.000,00', 5: '5.000.000,00', 6: '6.000.000,00', 7: '7.000.000,00'
+            },
+            'Teknologi Rekayasa Kimia Industri': {
+                0: '500.000,00', 1: '1.000.000,00', 2: '3.000.000,00', 3: '3.500.000,00', 
+                4: '4.250.000,00', 5: '5.000.000,00', 6: '6.000.000,00', 7: '7.000.000,00'
+            },
+            'Teknologi Rekayasa Komputer Jaringan': {
+                0: '500.000,00', 1: '1.000.000,00', 2: '3.000.000,00', 3: '3.500.000,00', 
+                4: '4.250.000,00', 5: '5.000.000,00', 6: '6.000.000,00', 7: '7.000.000,00'
+            },
+            'Teknologi Rekayasa Konstruksi Jalan dan Jembatan': {
+                0: '500.000,00', 1: '1.000.000,00', 2: '3.000.000,00', 3: '3.500.000,00', 
+                4: '4.250.000,00', 5: '5.000.000,00', 6: '6.000.000,00', 7: '7.000.000,00'
+            },
+            'Teknologi Rekayasa Manufaktur': {
+                0: '500.000,00', 1: '1.000.000,00', 2: '3.000.000,00', 3: '3.500.000,00', 
+                4: '4.250.000,00', 5: '5.000.000,00', 6: '6.000.000,00', 7: '7.000.000,00'
+            },
+            'Teknologi Rekayasa Pembangkit': {
+                0: '500.000,00', 1: '1.000.000,00', 2: '3.000.000,00', 3: '3.500.000,00', 
+                4: '4.250.000,00', 5: '5.000.000,00', 6: '6.000.000,00', 7: '7.000.000,00'
+            }
+                }
+
+            data['Ukt'] = predicted_class
+
+            # Fungsi untuk mendapatkan harga berdasarkan prodi dan ukt
+            def get_harga(row, data_b):
+                prodi = row['Prodi']
+                ukt_level = row['Ukt']
+                return data_b.get(prodi, {}).get(ukt_level, None)
+
+            # Terapkan fungsi ke DataFrame untuk membuat kolom 'harga'
+            data['harga'] = data.apply(get_harga, axis=1, data_b=b)
+            data = pd.DataFrame(data)
+            print(data)
+
+            cur = mysql.connection.cursor()
+            # Iterasi melalui setiap baris DataFrame dan menyimpan data ke database
+            for index, row in data.iterrows():
+                # Menjalankan kueri untuk menyimpan data
+                cur.execute("INSERT INTO datatesting (nama, jurusan, prodi, pekerjaan_ayah, penghasilan_ayah, status_ayah, pekerjaan_ibu, penghasilan_ibu, status_ibu, jumlah_tanggungan_keluarga, kepemilikan_rumah, sumber_air, kendaraanroda_4, kendaraanroda_2, biaya_listrik, watt_listrik, kondisi_rumah, ukt, harga) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", 
+                            (
+                                row['Nama Siswa'],
+                                row['Jurusan'],
+                                row['Prodi'], 
+                                row['pekerjaan_ayah'], 
+                                row['penghasilan_ayah'], 
+                                row['status_ayah'], 
+                                row['pekerjaan_ibu'],
+                                row['penghasilan_ibu'],
+                                row['status_ibu'],
+                                row['jumlah_tanggungan'],
+                                row['kepemilikan_rumah'],
+                                row['sumber_air'],
+                                row['kendaraan_roda_4'],
+                                row['kendaraan_roda_2'],
+                                row['biaya_listrik'],
+                                row['watt_listrik'],
+                                row['kondisi_rumah'],
+                                row['Ukt'],
+                                row['harga']
+                                ))
+            mysql.connection.commit()
+            cur.close()
+
+        else:
+            nama = request.form['nama']
+            jurusan = request.form['jurusan']
+            prodi = request.form['prodi']
+            pekerjaan_ayah = int(request.form['pekerjaan_ayah'])
+            penghasilan_ayah = int(request.form['penghasilan_ayah'])
+            status_ayah = int(request.form['status_ayah'])
+            pekerjaan_ibu = int(request.form['pekerjaan_ibu'])
+            penghasilan_ibu = int(request.form['penghasilan_ibu'])
+            status_ibu = int(request.form['status_ibu'])
+            jumlah_tanggungan = int(request.form['jumlah_tanggungan'])
+            kepemilikan_rumah = int(request.form['kepemilikan_rumah'])
+            sumber_air = int(request.form['sumber_air'])
+            kendaraan_roda_4 = int(request.form['kendaraan_roda_4'])
+            kendaraan_roda_2 = int(request.form['kendaraan_roda_2'])
+            biaya_listrik = int(request.form['biaya_listrik'])
+            watt_listrik = int(request.form['watt_listrik'])
+            kondisi_rumah = int(request.form['kondisi_rumah'])
 
         new_data1 = {
             'nama': [nama],
@@ -825,8 +830,13 @@ def postdatatesting():
             ))
         mysql.connection.commit()
     
-    flash("Data Testing Berhasil Di Tambah")
-    return redirect(url_for('datatesting'))
+        flash("Data Testing Berhasil Di Tambah")
+        return redirect(url_for('datatesting'))
+
+    except Exception as e:
+        flash("ERROR: Terjadi kesalahan saat menambahkan data testing")
+        # Redirect atau kembalikan sesuai kebutuhan aplikasi Anda
+        return redirect(url_for('datatesting'))
 
 @app.route('/deletedatatesting/<string:id_data>', methods = ['POST','DELETE'])
 def delatedatatesting(id_data):
