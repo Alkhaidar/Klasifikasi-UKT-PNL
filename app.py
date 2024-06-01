@@ -1,12 +1,17 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
 import pandas as pd
 from flask_mysqldb import MySQL
+from flask_paginate import Pagination
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split, cross_val_score
 from sklearn.metrics import accuracy_score, confusion_matrix
+from flask_bcrypt import Bcrypt
 
 app = Flask(__name__)
 app.secret_key= 'your-secret-key'
+
+# Initialize Bcrypt
+bcrypt = Bcrypt(app)
 
 # Sebelum menggunakan 'replace'
 pd.set_option('future.no_silent_downcasting', True)
@@ -21,13 +26,13 @@ mysql = MySQL(app)
 
 mappingPekerjaanAyah = {
     'TIDAK BEKERJA': 0,
-    'Lainnya': 1,
-    'Petani': 2,
-    'Nelayan': 3,
-    'PNS': 4,
-    'Wirausaha': 5,
-    'Peg. Swasta': 6,
-    'TNI / POLRI': 7,
+    'Petani': 1,
+    'Nelayan': 2,
+    'PNS': 3,
+    'Wirausaha': 4,
+    'Peg. Swasta': 5,
+    'TNI / POLRI': 6,
+    'Lainnya': 7
 }
 
 mappingPenghasilanAyah = {
@@ -58,18 +63,18 @@ mappingPenghasilanAyah = {
 }
 
 mappingStatusAyah = {
-    'Wafat': 1,
-    'Hidup': 2,
-    'Bercerai': 3
+    'Wafat': 0,
+    'Hidup': 1,
+    'Bercerai': 2
 }
 
 mappingPekerjaanIbu = {
     'TIDAK BEKERJA': 0,
-    'Lainnya': 1,
-    'Petani': 2,
-    'Wirausaha': 3,
-    'Peg. Swasta': 4,
-    'PNS': 5
+    'Petani': 1,
+    'Wirausaha': 2,
+    'Peg. Swasta': 3,
+    'PNS': 4,
+    'Lainnya': 5,
 }
 
 mappingPenghasilanIbu = {
@@ -99,8 +104,8 @@ mappingPenghasilanIbu = {
 }
 
 mappingStatusIbu = {
-    'Hidup': 2,
-    'Wafat': 1,
+    'Hidup': 1,
+    'Wafat': 0,
 }
 
 mappingKepemilikanRumah = {
@@ -113,25 +118,25 @@ mappingKepemilikanRumah = {
 }
 
 mappingSumberAir = {
-    'Sumur': 1,
-    'Sungai/Mata Air': 2,
-    'PDAM': 3,
-    'Kemasan': 4
+    'Sumur': 0,
+    'Sungai/Mata Air': 1,
+    'PDAM': 2,
+    'Kemasan': 3
 }
 
 mappingBiayaListrikBulanan = {
-    50000: 1,
-    100000: 2,
-    150000: 3,
-    200000: 4,
-    250000: 5,
-    300000: 6
+    50000: 0,
+    100000: 1,
+    150000: 2,
+    200000: 3,
+    250000: 4,
+    300000: 5
 }
 
 mappingKondisiRumah = {
-    'Buruk': 1,
-    'Sedang': 2,
-    'Baik': 3
+    'Buruk': 0,
+    'Sedang': 1,
+    'Baik': 2
 }
 
 def extract_number(string):
@@ -143,13 +148,14 @@ def extract_number(string):
 def convertPekerjaanAyah(pa):
     role = {
         0: "TIDAK BEKERJA",
-        1: "Lainnya",
-        2: "Petani",
-        3: "Nelayan",
-        4: "PNS",
-        5: "Wirausaha",
-        6: "Peg. Swasta",
-        7: "TNI / POLRI"
+        1: "Petani",
+        2: "Nelayan",
+        3: "PNS",
+        4: "Wirausaha",
+        5: "Peg. Swasta",
+        6: "TNI / POLRI",
+        7: "Lainnya",
+
     }
     return role.get(pa, "unknown")
 
@@ -184,20 +190,20 @@ def convertPenghasilanAyah(pa):
 
 def convertStatusAyah(pa):
     role = {
-        1: "Wafat",
-        2: "Hidup",
-        3: "Bercerai"
+        0: "Wafat",
+        1: "Hidup",
+        2: "Bercerai"
     }
     return role.get(pa, "unknown")
 
 def convertPekerjaanIbu(pa):
     role = {
         0: "TIDAK BEKERJA",
-        1: "Lainnya",
-        2: "Petani",
-        3: "Wirausaha",
-        4: "Pegawai Swasta",
-        5: "PNS"
+        1: "Petani",
+        2: "Wirausaha",
+        3: "Pegawai Swasta",
+        4: "PNS",
+        5: "Lainnya",
     }
     return role.get(pa, "unknown")
 
@@ -231,8 +237,8 @@ def convertPenghasilanIbu(pa):
 
 def convertStatusIbu(pa):
     role = {
-        1: "Wafat",
-        2: "Hidup",
+        0: "Wafat",
+        1: "Hidup",
     }
     return role.get(pa, "unknown")
 
@@ -249,29 +255,29 @@ def convertKepemilikanRumah(pa):
 
 def convertSumberAir(pa):
     role = {
-        1: "Sumur",
-        2: "Sungai/Mata Air",
-        3: "PDAM",
-        4: "Kemasan"
+        0: "Sumur",
+        1: "Sungai/Mata Air",
+        2: "PDAM",
+        3: "Kemasan"
     }
     return role.get(pa, "unknown")
 
 def convertBiayaListrikBulanan(pa):
     role = {
-        1: 50000,
-        2: 100000,
-        3: 150000,
-        4: 200000,
-        5: 250000,
-        6: 300000
+        0: 50000,
+        1: 100000,
+        2: 150000,
+        3: 200000,
+        4: 250000,
+        5: 300000
     }
     return role.get(pa, "unknown")
 
 def convertKondisiRumah(pa):
     role = {
-        1: "Buruk",
-        2: "Sedang",
-        3: "Baik"
+        0: "Buruk",
+        1: "Sedang",
+        2: "Baik"
     }
     return role.get(pa, "unknown")
 
@@ -290,49 +296,69 @@ def convertUKT(pa):
 
 app.jinja_env.globals.update(convertPA=convertPekerjaanAyah,convertPA1=convertPenghasilanAyah,convertSA=convertStatusAyah,convertPI=convertPekerjaanIbu,convertPI1=convertPenghasilanIbu,convertSI=convertStatusIbu,convertKR=convertKepemilikanRumah,convertSA1=convertSumberAir,convertBLB=convertBiayaListrikBulanan,convertKR1=convertKondisiRumah,convertUKT=convertUKT)
 
-@app.route ('/')
-def Index ():
+
+@app.route('/')
+def index():
     if 'nama' in session:
-        cur = mysql.connection.cursor()
-        cur.execute ('SELECT COUNT(*) FROM datatesting')
-        uji = cur.fetchone()
-        cur.execute ('SELECT COUNT(*) FROM datatraining')
-        latih = cur.fetchone()
-        cur.close()
-        return render_template('dashboard.html', nama=session['nama'], testing=uji[0], training=latih[0])
+        try:
+            cur = mysql.connection.cursor()
+            cur.execute('SELECT COUNT(*) FROM datatesting')
+            uji = cur.fetchone()
+            cur.execute('SELECT COUNT(*) FROM datatraining')
+            latih = cur.fetchone()
+            cur.close()
+            return render_template('dashboard.html', nama=session['nama'], testing=uji[0], training=latih[0])
+        except Exception as e:
+            flash(f'ERROR: {str(e)}')
+            return render_template('login.html')
     else:
-        return render_template('login.html')
+        flash('ERROR: You are not logged in.')
+        return redirect(url_for('login'))
 
 @app.route('/login', methods=['GET', 'POST'])
-def login ():
+def login():
     if request.method == 'POST':
         username = request.form['username']
-        pwd = request. form['password']
-        cur = mysql.connection.cursor()
-        cur.execute(f"select username, nama, password from tbl_users where username = '{username}'")
-        user = cur.fetchone()
-        cur.close()
-        if user and pwd == user [2]:
-            session ['nama'] = user[1]
-            return redirect(url_for('Index'))
-        else:
-            return render_template('login.html',error='Invalid username or password')
-    return render_template('login.html')
+        password = request.form['password']
+        
+        try:
+            cur = mysql.connection.cursor()
+            cur.execute("SELECT username, nama, password FROM tbl_users WHERE username = %s", (username,))
+            user = cur.fetchone()
+            cur.close()
 
-@app.route ('/insert', methods = ['POST'])
+            if user and bcrypt.check_password_hash(user[2], password):
+                session['nama'] = user[1]
+                return redirect(url_for('index'))
+            else:
+                flash('ERROR: Username dan Password Anda Salah')
+                return render_template('login.html')
+
+        except Exception as e:
+            flash(f'ERROR: {str(e)}')
+            return render_template('login.html')
+    
+    return render_template('login.html')
+def create_hashed_password(password):
+    return bcrypt.generate_password_hash(password).decode('utf-8')
+
+@app.route('/insert', methods=['POST'])
 def insert():
-    if request.method == "POST": 
+    if request.method == "POST":
         flash("Register Berhasil")
-        nama = request.form ['nama']
-        email = request.form ['email']
-        username = request.form ['username']
-        password = request.form ['password']
+        nama = request.form['nama']
+        email = request.form['email']
+        username = request.form['username']
+        password = request.form['password']
+        
+        hashed_password = create_hashed_password(password)
         
         cur = mysql.connection.cursor()
-        cur.execute ("INSERT into tbl_users (nama, email, username, password) VALUES (%s, %s, %s, %s)", ( nama, email, username, password))
+        cur.execute("INSERT INTO tbl_users (nama, email, username, password) VALUES (%s, %s, %s, %s)", (nama, email, username, hashed_password))
         mysql.connection.commit()
+        cur.close()
         return redirect(url_for('user'))
-
+    
 @app.route('/delete/<string:id_data>', methods = ['POST','DELETE'])
 def delateuser(id_data):
     if (request.form['_method'] == 'DELETE'):
@@ -348,13 +374,17 @@ def putUserReset(user_id):
     password = request.form['password']
     password2 = request.form['password2']
     
-    if(password == password2):
-        flash(" Change Password Berhasil")
+    if password == password2:
+        hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
+        flash("Change Password Berhasil")
         cur = mysql.connection.cursor()
-        cur.execute("""UPDATE tbl_users set password=%s WHERE id=%s""", (password, user_id))
+        cur.execute("""UPDATE tbl_users SET password = %s WHERE id = %s""", (hashed_password, user_id))
         mysql.connection.commit()
         cur.close()
-    return redirect(url_for('user'))
+        return redirect(url_for('user'))
+    else:
+        flash("Password tidak cocok")
+        return redirect(url_for('user'))
 
 @app.route ('/user')
 def user ():
@@ -370,10 +400,26 @@ def user ():
 @app.route ('/datatraining', methods = ['GET'])
 def datatraining ():    
     if 'nama' in session:
+        # page = request.args.get('page', default=1, type=int)
+        # per_page = 10
+
+        # offset = (page - 1) * per_page
+
         cur = mysql.connection.cursor()
+        # cur.execute('SELECT COUNT(*) FROM datatraining')
+        # total = cur.fetchone()[0]
+
         cur.execute ("SELECT * From datatraining")
-        data =cur.fetchall()
+        data = cur.fetchall()
         cur.close()
+
+        # pagination = Pagination(
+        #     page=page,
+        #     total=total,
+        #     per_page=per_page,
+        #     url='datatraining',
+        #     record_name='tbl_datatraining'
+        # )
         return render_template('datatraining.html', nama=session['nama'], tbl_datatraining = data)
     else:
         return render_template('login.html')
@@ -434,7 +480,7 @@ def postdatatraining ():
             return redirect(url_for('datatraining'))
         except Exception as e:
             flash("ERROR: Terjadi Kesalahan Saat Menambah Data Training")
-            return redirect(url_for('datatesting'))
+            return redirect(url_for('datatraining'))
    
 @app.route('/deletedatatraining/<string:id_data>', methods = ['POST','DELETE'])
 def deletedatatraining(id_data):
@@ -496,7 +542,6 @@ def postdatatesting():
         rf_classifier = RandomForestClassifier(n_estimators=100, random_state=42)
         rf_classifier.fit(X_train, y_train)
     
-
         if request.form['excel'] == 'True':
             
             data = request.files['file']
@@ -611,7 +656,7 @@ def postdatatesting():
                 0: '500.000,00', 1: '1.000.000,00', 2: '3.000.000,00', 3: '3.500.000,00', 
                 4: '4.250.000,00', 5: '5.000.000,00', 6: '6.000.000,00', 7: '7.000.000,00'
             },
-            'Teknologi Rekayasa Pembangkit': {
+            'Teknologi Rekayasa Pembangkit Energi': {
                 0: '500.000,00', 1: '1.000.000,00', 2: '3.000.000,00', 3: '3.500.000,00', 
                 4: '4.250.000,00', 5: '5.000.000,00', 6: '6.000.000,00', 7: '7.000.000,00'
             }
@@ -624,12 +669,11 @@ def postdatatesting():
                 prodi = row['Prodi']
                 ukt_level = row['Ukt']
                 return data_b.get(prodi, {}).get(ukt_level, None)
-
+        
             # Terapkan fungsi ke DataFrame untuk membuat kolom 'harga'
             data['harga'] = data.apply(get_harga, axis=1, data_b=b)
             data = pd.DataFrame(data)
-            print(data)
-
+            print(data)            
             cur = mysql.connection.cursor()
             # Iterasi melalui setiap baris DataFrame dan menyimpan data ke database
             for index, row in data.iterrows():
@@ -704,98 +748,98 @@ def postdatatesting():
         predicted_class = rf_classifier.predict(df)
 
         df_new['ukt'] = predicted_class
-
+        
         # Dictionary b dengan harga berdasarkan prodi dan ukt
         b = {
             'Administrasi Bisnis': {
         0: '500.000,00', 1: '1.000.000,00', 2: '2.000.000,00', 3: '2.500.000,00', 
         4: '3.000.000,00', 5: '3.750.000,00', 6: '4.500.000,00', 7: '5.500.000,00'
-    },
-    'Akuntansi': {
-        0: '500.000,00', 1: '1.000.000,00', 2: '2.000.000,00', 3: '2.500.000,00', 
-        4: '3.000.000,00', 5: '3.750.000,00', 6: '4.500.000,00', 7: '5.500.000,00'
-    },
-    'Perbankan dan Keuangan': {
-        0: '500.000,00', 1: '1.000.000,00', 2: '2.500.000,00', 3: '3.000.000,00', 
-        4: '3.500.000,00', 5: '4.250.000,00', 6: '5.000.000,00', 7: '6.000.000,00'
-    },
-    'Teknologi Elektronika': {
-        0: '500.000,00', 1: '1.000.000,00', 2: '2.500.000,00', 3: '3.000.000,00', 
-        4: '3.500.000,00', 5: '4.250.000,00', 6: '5.000.000,00', 7: '6.000.000,00'
-    },
-    'Teknologi Industri': {
-        0: '500.000,00', 1: '1.000.000,00', 2: '2.500.000,00', 3: '3.000.000,00', 
-        4: '3.500.000,00', 5: '4.250.000,00', 6: '5.000.000,00', 7: '6.000.000,00'
-    },
-    'Teknologi Kimia': {
-        0: '500.000,00', 1: '1.000.000,00', 2: '2.500.000,00', 3: '3.000.000,00', 
-        4: '3.500.000,00', 5: '4.250.000,00', 6: '5.000.000,00', 7: '6.000.000,00'
-    },
-    'Teknologi Kontruksi Bangunan Air': {
-        0: '500.000,00', 1: '1.000.000,00', 2: '2.500.000,00', 3: '3.000.000,00', 
-        4: '3.500.000,00', 5: '4.250.000,00', 6: '5.000.000,00', 7: '6.000.000,00'
-    },
-    'Teknologi Kontruksi Bangunan Gedung': {
-        0: '500.000,00', 1: '1.000.000,00', 2: '2.500.000,00', 3: '3.000.000,00', 
-        4: '3.500.000,00', 5: '4.250.000,00', 6: '5.000.000,00', 7: '6.000.000,00'
-    },
-    'Teknologi Kontruksi Jalan dan Jembatan': {
-        0: '500.000,00', 1: '1.000.000,00', 2: '2.500.000,00', 3: '3.000.000,00', 
-        4: '3.500.000,00', 5: '4.250.000,00', 6: '5.000.000,00', 7: '6.000.000,00'
-    },
-    'Teknologi Listrik': {
-        0: '500.000,00', 1: '1.000.000,00', 2: '2.500.000,00', 3: '3.000.000,00', 
-        4: '3.500.000,00', 5: '4.250.000,00', 6: '5.000.000,00', 7: '6.000.000,00'
-    },
-    'Teknologi Mesin': {
-        0: '500.000,00', 1: '1.000.000,00', 2: '3.000.000,00', 3: '3.500.000,00', 
-        4: '4.250.000,00', 5: '5.000.000,00', 6: '6.000.000,00', 7: '7.000.000,00'
-    },
-    'Teknologi Pengelohan Minyak dan Gas': {
-        0: '500.000,00', 1: '1.000.000,00', 2: '2.500.000,00', 3: '3.000.000,00', 
-        4: '3.500.000,00', 5: '4.250.000,00', 6: '5.000.000,00', 7: '6.000.000,00'
-    },
-    'Teknologi Telekomunikasi': {
-        0: '500.000,00', 1: '1.000.000,00', 2: '2.500.000,00', 3: '3.000.000,00', 
-        4: '3.500.000,00', 5: '4.250.000,00', 6: '5.000.000,00', 7: '6.000.000,00'
-    },
-    'Akuntansi Lembaga Keuangan Syariah': {
-        0: '500.000,00', 1: '1.000.000,00', 2: '3.000.000,00', 3: '3.500.000,00', 
-        4: '4.250.000,00', 5: '5.000.000,00', 6: '6.000.000,00', 7: '7.000.000,00'
-    },
-    'Teknik Informatika': {
-        0: '500.000,00', 1: '1.000.000,00', 2: '3.000.000,00', 3: '3.500.000,00', 
-        4: '4.250.000,00', 5: '5.000.000,00', 6: '6.000.000,00', 7: '7.000.000,00'
-    },
-    'Teknologi Rekayasa Instrumentasi dan Kontrol': {
-        0: '500.000,00', 1: '1.000.000,00', 2: '3.000.000,00', 3: '3.500.000,00', 
-        4: '4.250.000,00', 5: '5.000.000,00', 6: '6.000.000,00', 7: '7.000.000,00'
-    },
-    'Teknologi Rekayasa Jaringan Telekomunikasi': {
-        0: '500.000,00', 1: '1.000.000,00', 2: '3.000.000,00', 3: '3.500.000,00', 
-        4: '4.250.000,00', 5: '5.000.000,00', 6: '6.000.000,00', 7: '7.000.000,00'
-    },
-    'Teknologi Rekayasa Kimia Industri': {
-        0: '500.000,00', 1: '1.000.000,00', 2: '3.000.000,00', 3: '3.500.000,00', 
-        4: '4.250.000,00', 5: '5.000.000,00', 6: '6.000.000,00', 7: '7.000.000,00'
-    },
-    'Teknologi Rekayasa Komputer Jaringan': {
-        0: '500.000,00', 1: '1.000.000,00', 2: '3.000.000,00', 3: '3.500.000,00', 
-        4: '4.250.000,00', 5: '5.000.000,00', 6: '6.000.000,00', 7: '7.000.000,00'
-    },
-    'Teknologi Rekayasa Konstruksi Jalan dan Jembatan': {
-        0: '500.000,00', 1: '1.000.000,00', 2: '3.000.000,00', 3: '3.500.000,00', 
-        4: '4.250.000,00', 5: '5.000.000,00', 6: '6.000.000,00', 7: '7.000.000,00'
-    },
-    'Teknologi Rekayasa Manufaktur': {
-        0: '500.000,00', 1: '1.000.000,00', 2: '3.000.000,00', 3: '3.500.000,00', 
-        4: '4.250.000,00', 5: '5.000.000,00', 6: '6.000.000,00', 7: '7.000.000,00'
-    },
-    'Teknologi Rekayasa Pembangkit': {
-        0: '500.000,00', 1: '1.000.000,00', 2: '3.000.000,00', 3: '3.500.000,00', 
-        4: '4.250.000,00', 5: '5.000.000,00', 6: '6.000.000,00', 7: '7.000.000,00'
-    }
+        },
+        'Akuntansi': {
+            0: '500.000,00', 1: '1.000.000,00', 2: '2.000.000,00', 3: '2.500.000,00', 
+            4: '3.000.000,00', 5: '3.750.000,00', 6: '4.500.000,00', 7: '5.500.000,00'
+        },
+        'Perbankan dan Keuangan': {
+            0: '500.000,00', 1: '1.000.000,00', 2: '2.500.000,00', 3: '3.000.000,00', 
+            4: '3.500.000,00', 5: '4.250.000,00', 6: '5.000.000,00', 7: '6.000.000,00'
+        },
+        'Teknologi Elektronika': {
+            0: '500.000,00', 1: '1.000.000,00', 2: '2.500.000,00', 3: '3.000.000,00', 
+            4: '3.500.000,00', 5: '4.250.000,00', 6: '5.000.000,00', 7: '6.000.000,00'
+        },
+        'Teknologi Industri': {
+            0: '500.000,00', 1: '1.000.000,00', 2: '2.500.000,00', 3: '3.000.000,00', 
+            4: '3.500.000,00', 5: '4.250.000,00', 6: '5.000.000,00', 7: '6.000.000,00'
+        },
+        'Teknologi Kimia': {
+            0: '500.000,00', 1: '1.000.000,00', 2: '2.500.000,00', 3: '3.000.000,00', 
+            4: '3.500.000,00', 5: '4.250.000,00', 6: '5.000.000,00', 7: '6.000.000,00'
+        },
+        'Teknologi Kontruksi Bangunan Air': {
+            0: '500.000,00', 1: '1.000.000,00', 2: '2.500.000,00', 3: '3.000.000,00', 
+            4: '3.500.000,00', 5: '4.250.000,00', 6: '5.000.000,00', 7: '6.000.000,00'
+        },
+        'Teknologi Kontruksi Bangunan Gedung': {
+            0: '500.000,00', 1: '1.000.000,00', 2: '2.500.000,00', 3: '3.000.000,00', 
+            4: '3.500.000,00', 5: '4.250.000,00', 6: '5.000.000,00', 7: '6.000.000,00'
+        },
+        'Teknologi Kontruksi Jalan dan Jembatan': {
+            0: '500.000,00', 1: '1.000.000,00', 2: '2.500.000,00', 3: '3.000.000,00', 
+            4: '3.500.000,00', 5: '4.250.000,00', 6: '5.000.000,00', 7: '6.000.000,00'
+        },
+        'Teknologi Listrik': {
+            0: '500.000,00', 1: '1.000.000,00', 2: '2.500.000,00', 3: '3.000.000,00', 
+            4: '3.500.000,00', 5: '4.250.000,00', 6: '5.000.000,00', 7: '6.000.000,00'
+        },
+        'Teknologi Mesin': {
+            0: '500.000,00', 1: '1.000.000,00', 2: '3.000.000,00', 3: '3.500.000,00', 
+            4: '4.250.000,00', 5: '5.000.000,00', 6: '6.000.000,00', 7: '7.000.000,00'
+        },
+        'Teknologi Pengelohan Minyak dan Gas': {
+            0: '500.000,00', 1: '1.000.000,00', 2: '2.500.000,00', 3: '3.000.000,00', 
+            4: '3.500.000,00', 5: '4.250.000,00', 6: '5.000.000,00', 7: '6.000.000,00'
+        },
+        'Teknologi Telekomunikasi': {
+            0: '500.000,00', 1: '1.000.000,00', 2: '2.500.000,00', 3: '3.000.000,00', 
+            4: '3.500.000,00', 5: '4.250.000,00', 6: '5.000.000,00', 7: '6.000.000,00'
+        },
+        'Akuntansi Lembaga Keuangan Syariah': {
+            0: '500.000,00', 1: '1.000.000,00', 2: '3.000.000,00', 3: '3.500.000,00', 
+            4: '4.250.000,00', 5: '5.000.000,00', 6: '6.000.000,00', 7: '7.000.000,00'
+        },
+        'Teknik Informatika': {
+            0: '500.000,00', 1: '1.000.000,00', 2: '3.000.000,00', 3: '3.500.000,00', 
+            4: '4.250.000,00', 5: '5.000.000,00', 6: '6.000.000,00', 7: '7.000.000,00'
+        },
+        'Teknologi Rekayasa Instrumentasi dan Kontrol': {
+            0: '500.000,00', 1: '1.000.000,00', 2: '3.000.000,00', 3: '3.500.000,00', 
+            4: '4.250.000,00', 5: '5.000.000,00', 6: '6.000.000,00', 7: '7.000.000,00'
+        },
+        'Teknologi Rekayasa Jaringan Telekomunikasi': {
+            0: '500.000,00', 1: '1.000.000,00', 2: '3.000.000,00', 3: '3.500.000,00', 
+            4: '4.250.000,00', 5: '5.000.000,00', 6: '6.000.000,00', 7: '7.000.000,00'
+        },
+        'Teknologi Rekayasa Kimia Industri': {
+            0: '500.000,00', 1: '1.000.000,00', 2: '3.000.000,00', 3: '3.500.000,00', 
+            4: '4.250.000,00', 5: '5.000.000,00', 6: '6.000.000,00', 7: '7.000.000,00'
+        },
+        'Teknologi Rekayasa Komputer Jaringan': {
+            0: '500.000,00', 1: '1.000.000,00', 2: '3.000.000,00', 3: '3.500.000,00', 
+            4: '4.250.000,00', 5: '5.000.000,00', 6: '6.000.000,00', 7: '7.000.000,00'
+        },
+        'Teknologi Rekayasa Konstruksi Jalan dan Jembatan': {
+            0: '500.000,00', 1: '1.000.000,00', 2: '3.000.000,00', 3: '3.500.000,00', 
+            4: '4.250.000,00', 5: '5.000.000,00', 6: '6.000.000,00', 7: '7.000.000,00'
+        },
+        'Teknologi Rekayasa Manufaktur': {
+            0: '500.000,00', 1: '1.000.000,00', 2: '3.000.000,00', 3: '3.500.000,00', 
+            4: '4.250.000,00', 5: '5.000.000,00', 6: '6.000.000,00', 7: '7.000.000,00'
+        },
+        'Teknologi Rekayasa Pembangkit Energi': {
+            0: '500.000,00', 1: '1.000.000,00', 2: '3.000.000,00', 3: '3.500.000,00', 
+            4: '4.250.000,00', 5: '5.000.000,00', 6: '6.000.000,00', 7: '7.000.000,00'
         }
+            }
 
         # Fungsi untuk mendapatkan harga berdasarkan prodi dan ukt
         def get_harga(row, data_b):
@@ -829,12 +873,11 @@ def postdatatesting():
             df_new['harga'][0]
             ))
         mysql.connection.commit()
-    
         flash("Data Testing Berhasil Di Tambah")
         return redirect(url_for('datatesting'))
-
     except Exception as e:
-        flash("ERROR: Terjadi kesalahan saat menambahkan data testing")
+        print("Error:", e) 
+        flash(f"ERROR: Terjadi Kesalahan Saat Menambahkan Data Testing {e}")
         # Redirect atau kembalikan sesuai kebutuhan aplikasi Anda
         return redirect(url_for('datatesting'))
 

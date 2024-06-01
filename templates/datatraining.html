@@ -35,7 +35,7 @@
               </div>
             </div>
             <div class="col-sm-12 text-secondary">
-              <i class="bi bi-info-circle-fill text-info me-1"></i> File harus memiliki ekstensi .xlxx
+              <i class="bi bi-info-circle-fill text-info me-1"></i> File harus memiliki ekstensi .xlsx
             </div>
           </div>
           <div class="row mb-2 justify-content-end">
@@ -58,109 +58,107 @@
 <section class="section">
   {% with messages = get_flashed_messages() %}
   {% if messages %}
-    {% for message in messages %}
-      {% if message.startswith('ERROR:') %}
-      <div class="alert alert-danger alert-dismissible fade show mb-2" role="alert">
-      {% else %}
-      <div class="alert alert-success alert-dismissible fade show mb-2" role="alert">
+  {% for message in messages %}
+  {% if message.startswith('ERROR:') %}
+  <div class="alert alert-danger alert-dismissible fade show mb-2" role="alert">
+    {% else %}
+    <div class="alert alert-success alert-dismissible fade show mb-2" role="alert">
       {% endif %}
-          {{ message }}
-          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-      </div>
+      {{ message }}
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
     {% endfor %}
-  {% endif %}
-{% endwith %}
+    {% endif %}
+    {% endwith %}
 
-  <div class="col-lg-12">
-    <div class="card">
-      <div class="card-body">
-        <h5 class="card-title">Data Training</h5>
-        <!-- Table with stripped rows -->
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Data Training</h5>
+          <!-- Table with stripped rows -->
 
-        <table id="myTable" class="table responsive nowrap table-bordered table-striped align-middle"
-          style="width:100%">
-          <thead>
-            <tr>
-              <th>No</th>
-              <th>Nama Mahasiswa</th>
-              <th>Pekerjaan Ayah</th>
-              <th>Penghasilan Ayah</th>
-              <th>Status Ayah</th>
-              <th>Pekejaan Ibu</th>
-              <th>Penghasilan Ibu</th>
-              <th>Status Ibu</th>
-              <th>Jumlah Tanggungan</th>
-              <th>Kepemilikan Rumah</th>
-              <th>Sumber Air</th>
-              <th>Jumlah Kendaraan Roda Empat </th>
-              <th>Jumlah Kendaraan Roda Dua</th>
-              <th>Biaya Listrik Bulanan</th>
-              <th>Watt Listrik</th>
-              <th>Kondisi Rumah</th>
-              <th>UKT</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for row in tbl_datatraining %}
-            <tr>
-              <td>{{loop.index}}</td>
-              <td>{{row.1}}</td>
-              <td>{{ convertPA(row.2) }}</td>
-              <td>{{ convertPA1(row.3) }}</td>
-              <td>{{ convertSA(row.4) }}</td>
-              <td>{{ convertPI(row.5) }}</td>
-              <td>{{ convertPI1(row.6) }}</td>
-              <td>{{ convertSI(row.7) }}</td>
-              <td>{{row.10}} Orang</td>
-              <td>{{ convertKR(row.9) }}</td>
-              <td>{{ convertSA1(row.10) }}</td>
-              <td>{{row.11}}</td>
-              <td>{{row.12}}</td>
-              <td>{{ convertBLB(row.13) }}</td>
-              <td>{{row.14}} Ampere</td>
-              <td>{{ convertKR1(row.15) }}</td>
-              <td>{{ convertUKT(row.16) }}</td>
-              <td>
-                <button class="btn btn-danger" data-bs-toggle="modal"
-                data-bs-target="#modalHapus{{ loop.index }}">
-                 <i class="bi bi-trash"></i> </button>
-              </td>
-            </tr>
-             <!-- modal hapus -->
-             <div class="modal fade" id="modalHapus{{ loop.index }}" tabindex="-1"
-             aria-labelledby="exampleModalLabel" aria-hidden="true">
-             <div class="modal-dialog">
-                 <div class="modal-content">
-                     <div class="modal-header">
-                         <h5 class="modal-title" id="exampleModalLabel">Delete Data Testing</h5>
-                         <button type="button" class="btn-close" data-bs-dismiss="modal"
-                             aria-label="Close"></button>
-                     </div>
-                     <form action="/deletedatatraining/{{ row.0 }}" method="POST">
-                         <div class="modal-body">
-                             <div class="row">
-                                 <input type="hidden" name="_method" value="DELETE">
-                                 <p class="fs-6">Apakah Anda Yakin Menghapus Data Training <b>{{row.1}}</b>?</p>
-                             </div>
-                         </div>
-                         <div class="modal-footer">
-                             <button type="button" class="btn btn-secondary"
-                                 data-bs-dismiss="modal">Cancel</button>
-                             <button type="submit" class="btn btn-outline-danger">Delete</button>
-                         </div>
-                     </form>
-                 </div>
-             </div>
-         </div>
-         <!-- end modal hapus -->
-            {% endfor %}
-          </tbody>
-        </table>
-        <!-- End Table with stripped rows -->
+          <table id="myTable" class="table responsive nowrap table-bordered table-striped align-middle"
+            style="width:100%">
+            <thead>
+              <tr>
+                <th>No</th>
+                <th>Nama Mahasiswa</th>
+                <th>Pekerjaan Ayah</th>
+                <th>Penghasilan Ayah</th>
+                <th>Status Ayah</th>
+                <th>Pekejaan Ibu</th>
+                <th>Penghasilan Ibu</th>
+                <th>Status Ibu</th>
+                <th>Jumlah Tanggungan</th>
+                <th>Kepemilikan Rumah</th>
+                <th>Sumber Air</th>
+                <th>Jumlah Kendaraan Roda Empat </th>
+                <th>Jumlah Kendaraan Roda Dua</th>
+                <th>Biaya Listrik Bulanan</th>
+                <th>Watt Listrik</th>
+                <th>Kondisi Rumah</th>
+                <th>UKT</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for row in tbl_datatraining %}
+              <tr>
+                <td>{{loop.index}}</td>
+                <td>{{row.1}}</td>
+                <td>{{ convertPA(row.2) }}</td>
+                <td>{{ convertPA1(row.3) }}</td>
+                <td>{{ convertSA(row.4) }}</td>
+                <td>{{ convertPI(row.5) }}</td>
+                <td>{{ convertPI1(row.6) }}</td>
+                <td>{{ convertSI(row.7) }}</td>
+                <td>{{row.10}} Orang</td>
+                <td>{{ convertKR(row.9) }}</td>
+                <td>{{ convertSA1(row.10) }}</td>
+                <td>{{row.11}}</td>
+                <td>{{row.12}}</td>
+                <td>{{ convertBLB(row.13) }}</td>
+                <td>{{row.14}} Ampere</td>
+                <td>{{ convertKR1(row.15) }}</td>
+                <td>{{ convertUKT(row.16) }}</td>
+                <td>
+                  <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalHapus{{ loop.index }}">
+                    <i class="bi bi-trash"></i> </button>
+                </td>
+              </tr>
+              <!-- modal hapus -->
+              <div class="modal fade" id="modalHapus{{ loop.index }}" tabindex="-1" aria-labelledby="exampleModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="exampleModalLabel">Delete Data Testing</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form action="/deletedatatraining/{{ row.0 }}" method="POST">
+                      <div class="modal-body">
+                        <div class="row">
+                          <input type="hidden" name="_method" value="DELETE">
+                          <p class="fs-6">Apakah Anda Yakin Menghapus Data Training <b>{{row.1}}</b>?</p>
+                        </div>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-outline-danger">Delete</button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+              <!-- end modal hapus -->
+              {% endfor %}
+            </tbody>
+          </table>
+          <!-- End Table with stripped rows -->
+          
+        </div>
       </div>
     </div>
-  </div>
 </section>
 
 <script>

@@ -77,16 +77,6 @@
     </div>
 </div>
 
-<script>
-    // Menangani klik tombol tambah
-    document.getElementById('tambahButton').addEventListener('click', function () {
-        // Kosongkan form tambah sebelum menampilkannya
-        document.getElementById('formTambah').reset();
-    });
-</script>
-
-
-
 <section class="section">
     {% with messages = get_flashed_messages() %}
     {% if messages %}
@@ -222,5 +212,11 @@
     </div>
 </section>
 
-
+<script>
+    // Menangani klik tombol tambah
+    document.getElementById('tambahButton').addEventListener('click', function () {
+        // Kosongkan form tambah sebelum menampilkannya
+        document.getElementById('formTambah').reset();
+    });
+</script>
 {% endblock %}

@@ -6,7 +6,7 @@
   <nav>
     <ol class="breadcrumb">
       <li class="breadcrumb-item"><a href="">Home</a></li>
-      <li class="breadcrumb-item active">Data Testing</li>
+      <li class="breadcrumb-item active">Klasifikasi</li>
     </ol>
   </nav>
 </div><!-- End Page Title -->
@@ -22,7 +22,7 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title text-primary font-weight-bold" id="tambahModalLabel">Tambah Data Testing</h5>
+        <h5 class="modal-title text-primary font-weight-bold" id="tambahModalLabel">Tambah Data</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
@@ -36,7 +36,7 @@
               </div>
             </div>
             <div class="col-sm-12 text-secondary">
-              <i class="bi bi-info-circle-fill text-info me-1"></i> File harus memiliki ekstensi .xlxx
+              <i class="bi bi-info-circle-fill text-info me-1"></i> File harus memiliki ekstensi .xlsx
             </div>
           </div>
           <div class="row mb-2 justify-content-end">
@@ -76,7 +76,7 @@
           <input type="hidden" name="excel" value="False">
           <div class="mb-3">
             <label for="nama" class="form-label">Nama</label>
-            <input required type="text" class="form-control" id="nama" placeholder="Masukkan nama" name="nama">
+          <input required type="text" class="form-control" id="nama" placeholder="Masukkan nama" name="nama" oninput="this.value = this.value.replace(/[^a-zA-Z\s]/g, '')">
           </div>
           <div class="mb-3">
             <label for="jurusan" class="form-label">Jurusan</label>
@@ -120,13 +120,13 @@
             <label for="pekerjaan_ayah" class="form-label">Pekejaan Ayah</label>
             <select class="form-select" id="pekerjaan_ayah" name="pekerjaan_ayah">
               <option value="0">TIDAK BEKERJA</option>
-              <option value="2">Petani</option>
-              <option value="3">Nelayan</option>
-              <option value="4">PNS</option>
-              <option value="5">Wirausaha</option>
-              <option value="6">Peg. Swasta</option>
-              <option value="7">TNI / POLRI</option>
-              <option value="1">Lainnya</option>
+              <option value="1">Petani</option>
+              <option value="2">Nelayan</option>
+              <option value="3">PNS</option>
+              <option value="4">Wirausaha</option>
+              <option value="5">Peg. Swasta</option>
+              <option value="6">TNI / POLRI</option>
+              <option value="7">Lainnya</option>
             </select>
           </div>
           <div class="mb-3">
@@ -162,20 +162,20 @@
           <div class="mb-3">
             <label for="status_ayah" class="form-label">Status Ayah</label>
             <select class="form-select" id="status_ayah" name="status_ayah">
-              <option value="1">Wafat</option>
-              <option value="2">Hidup</option>
-              <option value="3">Becerai</option>
+              <option value="0">Wafat</option>
+              <option value="1">Hidup</option>
+              <option value="2">Becerai</option>
             </select>
           </div>
           <div class="mb-3">
             <label for="pekerjaan_ibu" class="form-label">Pekerjaan Ibu</label>
             <select class="form-select" id="pekerjaan_ibu" name="pekerjaan_ibu">
               <option value="0">Tidak Bekerja</option>
-              <option value="1">Lainnya</option>
-              <option value="2">Petani</option>
-              <option value="3">Wirausaha</option>
-              <option value="4">Pegawai Swasta</option>
-              <option value="5">PNS</option>
+              <option value="1">Petani</option>
+              <option value="2">Wirausaha</option>
+              <option value="3">Pegawai Swasta</option>
+              <option value="4">PNS</option>
+              <option value="5">Lainnya</option>
             </select>
           </div>
           <div class="mb-3">
@@ -209,8 +209,8 @@
           <div class="mb-3">
             <label for="status_ibu" class="form-label">Status Ibu</label>
             <select class="form-select" id="status_ibu" name="status_ibu">
-              <option value="1">Wafat</option>
-              <option value="2">Hidup</option>
+              <option value="0">Wafat</option>
+              <option value="1">Hidup</option>
             </select>
           </div>
           <div class="mb-3">
@@ -237,23 +237,31 @@
               <option value="3">Sewa Bulanan</option>
               <option value="4">Sewa Tahunan</option>
               <option value="5">Sendiri</option>
-          
             </select>
           </div>
           <div class="mb-3">
             <label for="sumber_air" class="form-label">Sumber Air</label>
             <select class="form-select" id="sumber_air" name="sumber_air">
-              <option value="1">Sumur</option>
-              <option value="2">Sungai/Mata Air</option>
-              <option value="3">PDAM</option>
-              <option value="4">Kemasan</option>                        
+              <option value="0">Sumur</option>
+              <option value="1">Sungai/Mata Air</option>
+              <option value="2">PDAM</option>
+              <option value="3">Kemasan</option>                        
             </select>
           </div>
           <div class="mb-3">
             <label for="kendaraan_roda_4" class="form-label">Kendaraan Roda 4</label>
             <select class="form-select" id="kendaraan_roda_4" name="kendaraan_roda_4">
               <option value="0">0</option>
-              <option value="1">1</option>                   
+              <option value="1">1</option>          
+              <option value="2">2</option> 
+              <option value="3">3</option>          
+              <option value="4">4</option> 
+              <option value="5">5</option> 
+              <option value="6">6</option> 
+              <option value="7">7</option> 
+              <option value="8">8</option> 
+              <option value="9">9</option> 
+              <option value="10">10</option> 
             </select>
           </div>
           <div class="mb-3">
@@ -263,6 +271,13 @@
               <option value="1">1</option>
               <option value="2">2</option>
               <option value="3">3</option>
+              <option value="4">4</option> 
+              <option value="5">5</option> 
+              <option value="6">6</option> 
+              <option value="7">7</option> 
+              <option value="8">8</option> 
+              <option value="9">9</option> 
+              <option value="10">10</option> 
             </select>
           </div>
           <div class="mb-3">
@@ -291,9 +306,9 @@
           <div class="mb-3">
             <label for="kondisi_rumah" class="form-label">Kondisi Rumah</label>
             <select class="form-select" id="kondisi_rumah" name="kondisi_rumah">
-              <option value="1">Buruk</option>
-              <option value="2">Sedang</option>
-              <option value="3">Baik</option>
+              <option value="0">Buruk</option>
+              <option value="1">Sedang</option>
+              <option value="2">Baik</option>
             </select>
           </div>
           <div class="modal-footer">
@@ -323,9 +338,6 @@
     {% endfor %}
   {% endif %}
 {% endwith %}
-
-
-  
   <div class="col-lg-12">
     <div class="card">
       <div class="card-body">

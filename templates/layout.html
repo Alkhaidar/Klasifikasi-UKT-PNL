@@ -94,7 +94,7 @@
       <li class="nav-item">
         <a class="nav-link {% if request.path == '/datatesting' %} {% else %} collapsed {% endif %}"
           href="/datatesting">
-          <i class="bi bi-tools"></i><span>Data Testing</span>
+          <i class="bi bi-tools"></i><span>Klasifikasi</span>
         </a>
 
       <li class="nav-item">
@@ -111,12 +111,10 @@
       </li><!-- End Charts Nav -->
 
       <li class="nav-item">
-        <a class="nav-link collapsed" href="/logout">
-          <i class="bi bi-box-arrow-right"></i><span>Logout</span>
-
+        <a class="nav-link {% if request.path == '/logout' %} {% else %} collapsed {% endif %}" href="/logout">
+          <i class="bi bi-box-arrow-right"></i> Logout
         </a>
       </li><!-- End Charts Nav -->
-
     </ul>
   </aside><!-- End Sidebar-->
 
