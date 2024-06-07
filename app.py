@@ -309,10 +309,8 @@ def index():
             cur.close()
             return render_template('dashboard.html', nama=session['nama'], testing=uji[0], training=latih[0])
         except Exception as e:
-            flash(f'ERROR: {str(e)}')
             return render_template('login.html')
     else:
-        flash('ERROR: You are not logged in.')
         return redirect(url_for('login'))
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -320,7 +318,6 @@ def login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        
         try:
             cur = mysql.connection.cursor()
             cur.execute("SELECT username, nama, password FROM tbl_users WHERE username = %s", (username,))
@@ -335,7 +332,7 @@ def login():
                 return render_template('login.html')
 
         except Exception as e:
-            flash(f'ERROR: {str(e)}')
+            flash('ERROR: Username dan Password Anda Salah')
             return render_template('login.html')
     
     return render_template('login.html')

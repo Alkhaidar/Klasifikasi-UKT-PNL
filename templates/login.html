@@ -88,10 +88,16 @@
                                       </div>
   
                                       <div class="col-12">
-                                          <label for="yourPassword" class="form-label">Password</label>
-                                          <input type="password" name="password" class="form-control" id="yourPassword" required>
-                                          <div class="invalid-feedback">Please enter your password!</div>
-                                      </div>
+                                        <label for="yourPassword" class="form-label">Password</label>
+                                        <div class="input-group">
+                                            <input type="password" name="password" class="form-control" id="yourPassword" required>
+                                            <button type="button" class="btn btn-outline-secondary" id="showPasswordToggle">
+                                                <i class="bi bi-eye"></i>
+                                            </button>
+                                        </div>
+                                        <div class="invalid-feedback">Please enter your password!</div>
+                                    </div>
+                                    
                                       <div class="col-12 text-center">
                                           <button class="btn btn-primary w-50" type="submit">Login</button>
                                       </div>
@@ -132,7 +138,17 @@
   
   <!-- Template Main JS File -->
   <script src="static/assets/js/main.js"></script>
-
+ <script>
+    document.getElementById('showPasswordToggle').addEventListener('click', function() {
+    var passwordField = document.getElementById('yourPassword');
+    var fieldType = passwordField.getAttribute('type');
+    if (fieldType === 'password') {
+        passwordField.setAttribute('type', 'text');
+    } else {
+        passwordField.setAttribute('type', 'password');
+    }
+});
+ </script>
   
   </body>
 
