@@ -1,10 +1,8 @@
-from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
+from flask import Flask, render_template, request, redirect, url_for, session, flash
 import pandas as pd
 from flask_mysqldb import MySQL
-from flask_paginate import Pagination
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.model_selection import train_test_split, cross_val_score
-from sklearn.metrics import accuracy_score, confusion_matrix
+from sklearn.model_selection import train_test_split
 from flask_bcrypt import Bcrypt
 
 app = Flask(__name__)
@@ -12,9 +10,6 @@ app.secret_key= 'your-secret-key'
 
 # Initialize Bcrypt
 bcrypt = Bcrypt(app)
-
-# Sebelum menggunakan 'replace'
-pd.set_option('future.no_silent_downcasting', True)
 
 #Meghubungkan Mysql
 app.config['MYSQL_HOST'] ='localhost'
@@ -447,7 +442,6 @@ def postdatatraining ():
             data['Nilai Biaya Listrik Bulanan'] = data['Biaya Listrik Bulanan'].replace(mappingBiayaListrikBulanan)
             data['Nilai Kondisi Rumah'] = data['Kondisi Rumah'].replace(mappingKondisiRumah)
             
-
             cur = mysql.connection.cursor()
             # Iterasi melalui setiap baris DataFrame dan menyimpan data ke database
             for index, row in data.iterrows():

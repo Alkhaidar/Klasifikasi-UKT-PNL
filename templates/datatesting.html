@@ -6,7 +6,7 @@
   <nav>
     <ol class="breadcrumb">
       <li class="breadcrumb-item"><a href="">Home</a></li>
-      <li class="breadcrumb-item active">Klasifikasi</li>
+      <li class="breadcrumb-item active">Data Testing</li>
     </ol>
   </nav>
 </div><!-- End Page Title -->
@@ -430,6 +430,70 @@
 </section>
 
 <script>
+  document.addEventListener("DOMContentLoaded", function() {
+    var jurusanSelect = document.getElementById("jurusan");
+    var prodiSelect = document.getElementById("prodi");
+    
+    // Objek yang berisi jurusan dan prodi
+    var jurusanProdi = {
+      "Teknik Sipil": [
+        "Teknologi Kontruksi Bangunan Air",
+        "Teknologi Kontruksi Jalan dan Jembatan",
+        "Teknologi Kontruksi Bangunan Gedung"
+      ],
+      "Teknik Kimia": [
+        "Teknologi Kontruksi Jalan dan Jembatan",
+        "Teknologi Pengelohan Minyak dan Gas",
+        "Teknologi Rekayasa Kimia Industri",
+        "Teknologi Kimia"
+      ],
+      "Teknik Mesin": [
+        "Teknologi Mesin",
+        "Teknologi Industri",
+        "Teknologi Rekayasa Manufaktur"
+      ],
+      "Teknik Elektro": [
+        "Teknologi Listrik",
+        "Teknologi Telekomunikasi",
+        "Teknologi Rekayasa Instrumentasi dan Kontrol",
+        "Teknologi Rekayasa Jaringan Telekomunikasi",
+        "Teknologi Rekayasa Pembangkit Energi"
+      ],
+      "Tata Niaga": [
+        "Administrasi Bisnis",
+        "Akuntansi",
+        "Perbankan dan Keuangan",
+        "Akuntansi Lembaga Keuangan Syariah"
+      ],
+      "Teknologi Informasi Dan Komputer": [
+        "Teknik Informatika",
+        "Teknologi Rekayasa Komputer Jaringan"
+      ]
+    };
+  
+    // Fungsi untuk mengisi dropdown prodi berdasarkan jurusan yang dipilih
+    function populateProdi() {
+      var selectedJurusan = jurusanSelect.value;
+      prodiSelect.innerHTML = ""; // Menghapus opsi prodi sebelumnya
+  
+      // Jika jurusan dipilih, tambahkan opsi prodi sesuai dengan jurusan tersebut
+      if (selectedJurusan !== "") {
+        var prodiOptions = jurusanProdi[selectedJurusan];
+        for (var i = 0; i < prodiOptions.length; i++) {
+          var option = document.createElement("option");
+          option.text = prodiOptions[i];
+          option.value = prodiOptions[i];
+          prodiSelect.appendChild(option);
+        }
+      }
+    }
+  
+    // Panggil fungsi populateProdi() ketika nilai dropdown jurusan berubah
+    jurusanSelect.addEventListener("change", populateProdi);
+  
+  });
+
+
   // Menangani klik tombol tambah
   document.getElementById('tambahButton').addEventListener('click', function () {
     // Kosongkan form tambah sebelum menampilkannya
